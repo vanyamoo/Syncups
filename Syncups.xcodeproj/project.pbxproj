@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		4E96473B2CC94C4600C6995B /* Tagged in Frameworks */ = {isa = PBXBuildFile; productRef = 4E96473A2CC94C4600C6995B /* Tagged */; };
+		4E96473D2CC94C4600C6995B /* TaggedMoney in Frameworks */ = {isa = PBXBuildFile; productRef = 4E96473C2CC94C4600C6995B /* TaggedMoney */; };
+		4E96473F2CC94C4600C6995B /* TaggedTime in Frameworks */ = {isa = PBXBuildFile; productRef = 4E96473E2CC94C4600C6995B /* TaggedTime */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		4E9647222CC9474700C6995B /* Syncups.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Syncups.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +29,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E96473B2CC94C4600C6995B /* Tagged in Frameworks */,
+				4E96473D2CC94C4600C6995B /* TaggedMoney in Frameworks */,
+				4E96473F2CC94C4600C6995B /* TaggedTime in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +74,9 @@
 			);
 			name = Syncups;
 			packageProductDependencies = (
+				4E96473A2CC94C4600C6995B /* Tagged */,
+				4E96473C2CC94C4600C6995B /* TaggedMoney */,
+				4E96473E2CC94C4600C6995B /* TaggedTime */,
 			);
 			productName = Syncups;
 			productReference = 4E9647222CC9474700C6995B /* Syncups.app */;
@@ -94,6 +106,9 @@
 			);
 			mainGroup = 4E9647192CC9474700C6995B;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				4E9647392CC94C4600C6995B /* XCRemoteSwiftPackageReference "swift-tagged" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4E9647232CC9474700C6995B /* Products */;
 			projectDirPath = "";
@@ -324,6 +339,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4E9647392CC94C4600C6995B /* XCRemoteSwiftPackageReference "swift-tagged" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-tagged";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.10.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4E96473A2CC94C4600C6995B /* Tagged */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4E9647392CC94C4600C6995B /* XCRemoteSwiftPackageReference "swift-tagged" */;
+			productName = Tagged;
+		};
+		4E96473C2CC94C4600C6995B /* TaggedMoney */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4E9647392CC94C4600C6995B /* XCRemoteSwiftPackageReference "swift-tagged" */;
+			productName = TaggedMoney;
+		};
+		4E96473E2CC94C4600C6995B /* TaggedTime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4E9647392CC94C4600C6995B /* XCRemoteSwiftPackageReference "swift-tagged" */;
+			productName = TaggedTime;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4E96471A2CC9474700C6995B /* Project object */;
 }
