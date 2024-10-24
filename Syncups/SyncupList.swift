@@ -25,7 +25,11 @@ final class SyncupListModel: ObservableObject {
     }
     
     func addSyncupButtonTapped() {
-        self.destination = .add(Syncup(id: Syncup.ID(UUID()))) // and here we hydrate the destination state Note: We are reaching out to this global, uncontrolled dependency for generating a random UUID. That is going to make testing very difficult, and one of the main reasons to extract the view’s logic into an observable object is testability.
+        // and here we hydrate the destination state
+        // Note: We are reaching out to this global, uncontrolled dependency for generating a random
+        //      UUID. That is going to make testing very difficult, and one of the main reasons to
+        //      extract the view’s logic into an observable object is testability.
+        self.destination = .add(Syncup(id: Syncup.ID(UUID())))
     }
 }
 
@@ -53,7 +57,10 @@ struct SyncupList: View {
 //                Text("")
 //            }
             .sheet(item: $model.destination.add) { $syncup in
-                Text("New Sync-up")
+                NavigationStack {
+                    EditSyncupView(syncup: $syncup)
+                        .navigationTitle("New Syncup")
+                }
             }
         }
     }
