@@ -11,11 +11,18 @@ import SwiftUINavigation
 struct EditSyncupView: View {
     @Binding var syncup: Syncup
     
+    enum Field: Hashable {
+        case attendee(Attendee.ID)
+        case title
+    }
+    
+    @FocusState var focus: Field? // providing a default to @FocusState is not allowed
+    
     var body: some View {
         Form {
             Section {
                 TextField("Title", text: $syncup.title)
-                    //.focused($focus, equals: .title)
+                    .focused($focus, equals: .title)
                 HStack {
                     Slider(value: $syncup.duration.seconds, in: 5...30, step: 1) {
                         Text("Length")
@@ -31,7 +38,7 @@ struct EditSyncupView: View {
             Section {
                 ForEach($syncup.attendees) { $attendee in
                     TextField("Name", text: $attendee.name)
-                        //.focused($focus, equals: .attendee(attendee.id))
+                        .focused($focus, equals: .attendee(attendee.id))
                 }
                 .onDelete { indices in
                     //model.deleteAttendees(atOffsets: indices)
@@ -39,11 +46,14 @@ struct EditSyncupView: View {
                     if syncup.attendees.isEmpty {
                         syncup.attendees.append(Attendee(id: Attendee.ID(UUID()), name: ""))
                     }
+                    focus = .attendee(syncup.attendees[indices.first!].id)
                 }
                 
                 Button("New attendee") {
                     //model.addAttendeeButtonTapped()
-                    syncup.attendees.append(Attendee(id: Attendee.ID(UUID()), name: ""))
+                    let attendee = Attendee(id: Attendee.ID(UUID()), name: "")
+                    syncup.attendees.append(attendee)
+                    focus = .attendee(attendee.id)
                 }
             } header: {
                 Text("Attendees")
@@ -53,6 +63,7 @@ struct EditSyncupView: View {
             if syncup.attendees.isEmpty {
                 syncup.attendees.append(Attendee(id: Attendee.ID(UUID()), name: ""))
             }
+            focus = .title
         }
     }
 }
