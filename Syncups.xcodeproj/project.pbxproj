@@ -10,6 +10,10 @@
 		4E96473B2CC94C4600C6995B /* Tagged in Frameworks */ = {isa = PBXBuildFile; productRef = 4E96473A2CC94C4600C6995B /* Tagged */; };
 		4E96473D2CC94C4600C6995B /* TaggedMoney in Frameworks */ = {isa = PBXBuildFile; productRef = 4E96473C2CC94C4600C6995B /* TaggedMoney */; };
 		4E96473F2CC94C4600C6995B /* TaggedTime in Frameworks */ = {isa = PBXBuildFile; productRef = 4E96473E2CC94C4600C6995B /* TaggedTime */; };
+		4E9647432CCA5C4000C6995B /* AppKitNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 4E9647422CCA5C4000C6995B /* AppKitNavigation */; };
+		4E9647452CCA5C4000C6995B /* SwiftNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 4E9647442CCA5C4000C6995B /* SwiftNavigation */; };
+		4E9647472CCA5C4000C6995B /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 4E9647462CCA5C4000C6995B /* SwiftUINavigation */; };
+		4E9647492CCA5C4000C6995B /* UIKitNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 4E9647482CCA5C4000C6995B /* UIKitNavigation */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,7 +33,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E9647492CCA5C4000C6995B /* UIKitNavigation in Frameworks */,
 				4E96473B2CC94C4600C6995B /* Tagged in Frameworks */,
+				4E9647432CCA5C4000C6995B /* AppKitNavigation in Frameworks */,
+				4E9647472CCA5C4000C6995B /* SwiftUINavigation in Frameworks */,
+				4E9647452CCA5C4000C6995B /* SwiftNavigation in Frameworks */,
 				4E96473D2CC94C4600C6995B /* TaggedMoney in Frameworks */,
 				4E96473F2CC94C4600C6995B /* TaggedTime in Frameworks */,
 			);
@@ -42,6 +50,7 @@
 			isa = PBXGroup;
 			children = (
 				4E9647242CC9474700C6995B /* Syncups */,
+				4E9647412CCA5C4000C6995B /* Frameworks */,
 				4E9647232CC9474700C6995B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -52,6 +61,13 @@
 				4E9647222CC9474700C6995B /* Syncups.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		4E9647412CCA5C4000C6995B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -77,6 +93,10 @@
 				4E96473A2CC94C4600C6995B /* Tagged */,
 				4E96473C2CC94C4600C6995B /* TaggedMoney */,
 				4E96473E2CC94C4600C6995B /* TaggedTime */,
+				4E9647422CCA5C4000C6995B /* AppKitNavigation */,
+				4E9647442CCA5C4000C6995B /* SwiftNavigation */,
+				4E9647462CCA5C4000C6995B /* SwiftUINavigation */,
+				4E9647482CCA5C4000C6995B /* UIKitNavigation */,
 			);
 			productName = Syncups;
 			productReference = 4E9647222CC9474700C6995B /* Syncups.app */;
@@ -108,6 +128,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				4E9647392CC94C4600C6995B /* XCRemoteSwiftPackageReference "swift-tagged" */,
+				4E9647402CCA5C2A00C6995B /* XCRemoteSwiftPackageReference "swift-navigation" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4E9647232CC9474700C6995B /* Products */;
@@ -349,6 +370,14 @@
 				minimumVersion = 0.10.0;
 			};
 		};
+		4E9647402CCA5C2A00C6995B /* XCRemoteSwiftPackageReference "swift-navigation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-navigation";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -366,6 +395,26 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4E9647392CC94C4600C6995B /* XCRemoteSwiftPackageReference "swift-tagged" */;
 			productName = TaggedTime;
+		};
+		4E9647422CCA5C4000C6995B /* AppKitNavigation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4E9647402CCA5C2A00C6995B /* XCRemoteSwiftPackageReference "swift-navigation" */;
+			productName = AppKitNavigation;
+		};
+		4E9647442CCA5C4000C6995B /* SwiftNavigation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4E9647402CCA5C2A00C6995B /* XCRemoteSwiftPackageReference "swift-navigation" */;
+			productName = SwiftNavigation;
+		};
+		4E9647462CCA5C4000C6995B /* SwiftUINavigation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4E9647402CCA5C2A00C6995B /* XCRemoteSwiftPackageReference "swift-navigation" */;
+			productName = SwiftUINavigation;
+		};
+		4E9647482CCA5C4000C6995B /* UIKitNavigation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4E9647402CCA5C2A00C6995B /* XCRemoteSwiftPackageReference "swift-navigation" */;
+			productName = UIKitNavigation;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

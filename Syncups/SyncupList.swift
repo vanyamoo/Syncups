@@ -5,13 +5,27 @@
 //  Created by Vanya Mutafchieva on 23/10/2024.
 //
 
+import SwiftUINavigation
 import SwiftUI
 
 final class SyncupListModel: ObservableObject {
     @Published var syncups: [Syncup]
+    //@Published var addSyncup: Syncup? // nill - the addSyncup sheet is presented, non-nill - the sheet is presented
+    @Published var destination: Destination? // (instead of addSyncup) we hold on to a single piece of state to represent us navigating to a destination, but it's Optional (nill represents we are not navigated anywhere, and non-nill represents we are navigated to one of the Destinations)
     
-    init(syncups: [Syncup] = []) {
+    // models all possible destinations we can navigate to
+    @CasePathable //the @CasePathable macro allows one to refer to the cases of an enum with dot-syntax just like one does with structs and properties
+    enum Destination {
+        case add(Syncup)
+    }
+    
+    init(destination: Destination? = nil, syncups: [Syncup] = []) {
+        self.destination = destination // we add destination to init because whoever creates the model will have the oportunity to have destination hydrated and that's what unlocks deep linking capabilities
         self.syncups = syncups
+    }
+    
+    func addSyncupButtonTapped() {
+        self.destination = .add(Syncup(id: Syncup.ID(UUID()))) // and here we hydrate the destination state Note: We are reaching out to this global, uncontrolled dependency for generating a random UUID. That is going to make testing very difficult, and one of the main reasons to extract the view’s logic into an observable object is testability.
     }
 }
 
@@ -27,7 +41,20 @@ struct SyncupList: View {
                         .listRowBackground(syncup.theme.mainColor)
                 }
             }
+            .toolbar {
+                Button {
+                    model.addSyncupButtonTapped()
+                } label: {
+                    Image(systemName: "plus")
+                }
+            }
             .navigationTitle("Daily Syncups")
+//            .sheet(item: $model.destination.add) { model in
+//                Text("")
+//            }
+            .sheet(item: $model.destination.add) { $syncup in
+                Text("New Sync-up")
+            }
         }
     }
 }
