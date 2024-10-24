@@ -84,9 +84,15 @@ extension Duration {
   }
 }
 
+//struct PreviewContainer: View {
+//    @State private var syncup: Syncup = Syncup.mock
+//    var body: some View {
+//        EditSyncupView(syncup: $syncup)
+//    }
+//}
+
 #Preview {
-    //@Previewable
-    WithState(initialValue: Syncup.mock) { $syncup in
-        EditSyncupView(syncup: $syncup)
-    }
+    //PreviewContainer() // pre-iOS18
+    @Previewable @State var syncup: Syncup = Syncup.mock
+    EditSyncupView(syncup: $syncup)
 }

@@ -31,6 +31,30 @@ final class SyncupListModel: ObservableObject {
         //      extract the view’s logic into an observable object is testability.
         self.destination = .add(Syncup(id: Syncup.ID(UUID())))
     }
+    
+    func dismissAddSyncupButtonTapped() {
+        destination = nil
+    }
+    
+    func confirmAddSyncupButtonTapped() {
+        defer { destination = nil } // no matter what happend we'll clear the sheet
+//        if let destination {
+//            switch destination {
+//            case let .add(newSyncup):
+//                syncups.append(newSyncup)
+//            }
+//        }
+        
+        guard case var .add(newSyncup) = destination else { return } // var instead of let because we want to massage the data a bit before appending
+        
+        newSyncup.attendees.removeAll { attendee in
+            attendee.name.allSatisfy(\.isWhitespace) // remove attendees with empty names
+        }
+        if newSyncup.attendees.isEmpty {
+            newSyncup.attendees.append(Attendee(id: Attendee.ID(UUID()), name: ""))
+        }
+        syncups.append(newSyncup)
+    }
 }
 
 struct SyncupList: View {
@@ -60,6 +84,19 @@ struct SyncupList: View {
                 NavigationStack {
                     EditSyncupView(syncup: $syncup)
                         .navigationTitle("New Syncup")
+                        .toolbar {
+                            ToolbarItem(placement: .cancellationAction) {
+                                Button("Dismiss") {
+                                    model.dismissAddSyncupButtonTapped()
+                                }
+                            }
+                            
+                            ToolbarItem(placement: .confirmationAction) {
+                                Button("Add") {
+                                    model.confirmAddSyncupButtonTapped()
+                                }
+                            }
+                        }
                 }
             }
         }
