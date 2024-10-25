@@ -16,14 +16,30 @@
 		4E9647492CCA5C4000C6995B /* UIKitNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 4E9647482CCA5C4000C6995B /* UIKitNavigation */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		4E96482D2CCBB73B00C6995B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4E96471A2CC9474700C6995B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4E9647212CC9474700C6995B;
+			remoteInfo = Syncups;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		4E9647222CC9474700C6995B /* Syncups.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Syncups.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4E9648292CCBB73B00C6995B /* SyncupsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SyncupsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		4E9647242CC9474700C6995B /* Syncups */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Syncups;
+			sourceTree = "<group>";
+		};
+		4E96482A2CCBB73B00C6995B /* SyncupsTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = SyncupsTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -43,6 +59,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4E9648262CCBB73B00C6995B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -50,6 +73,7 @@
 			isa = PBXGroup;
 			children = (
 				4E9647242CC9474700C6995B /* Syncups */,
+				4E96482A2CCBB73B00C6995B /* SyncupsTests */,
 				4E9647412CCA5C4000C6995B /* Frameworks */,
 				4E9647232CC9474700C6995B /* Products */,
 			);
@@ -59,6 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				4E9647222CC9474700C6995B /* Syncups.app */,
+				4E9648292CCBB73B00C6995B /* SyncupsTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -102,6 +127,29 @@
 			productReference = 4E9647222CC9474700C6995B /* Syncups.app */;
 			productType = "com.apple.product-type.application";
 		};
+		4E9648282CCBB73B00C6995B /* SyncupsTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4E96482F2CCBB73B00C6995B /* Build configuration list for PBXNativeTarget "SyncupsTests" */;
+			buildPhases = (
+				4E9648252CCBB73B00C6995B /* Sources */,
+				4E9648262CCBB73B00C6995B /* Frameworks */,
+				4E9648272CCBB73B00C6995B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4E96482E2CCBB73B00C6995B /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				4E96482A2CCBB73B00C6995B /* SyncupsTests */,
+			);
+			name = SyncupsTests;
+			packageProductDependencies = (
+			);
+			productName = SyncupsTests;
+			productReference = 4E9648292CCBB73B00C6995B /* SyncupsTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -114,6 +162,10 @@
 				TargetAttributes = {
 					4E9647212CC9474700C6995B = {
 						CreatedOnToolsVersion = 16.0;
+					};
+					4E9648282CCBB73B00C6995B = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 4E9647212CC9474700C6995B;
 					};
 				};
 			};
@@ -136,12 +188,20 @@
 			projectRoot = "";
 			targets = (
 				4E9647212CC9474700C6995B /* Syncups */,
+				4E9648282CCBB73B00C6995B /* SyncupsTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		4E9647202CC9474700C6995B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4E9648272CCBB73B00C6995B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -158,7 +218,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4E9648252CCBB73B00C6995B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4E96482E2CCBB73B00C6995B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4E9647212CC9474700C6995B /* Syncups */;
+			targetProxy = 4E96482D2CCBB73B00C6995B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		4E96472E2CC9474900C6995B /* Debug */ = {
@@ -338,6 +413,42 @@
 			};
 			name = Release;
 		};
+		4E9648302CCBB73B00C6995B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = HB939N9AUT;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vanyamoo.SyncupsTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Syncups.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Syncups";
+			};
+			name = Debug;
+		};
+		4E9648312CCBB73B00C6995B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = HB939N9AUT;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vanyamoo.SyncupsTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Syncups.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Syncups";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -355,6 +466,15 @@
 			buildConfigurations = (
 				4E9647312CC9474900C6995B /* Debug */,
 				4E9647322CC9474900C6995B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4E96482F2CCBB73B00C6995B /* Build configuration list for PBXNativeTarget "SyncupsTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4E9648302CCBB73B00C6995B /* Debug */,
+				4E9648312CCBB73B00C6995B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

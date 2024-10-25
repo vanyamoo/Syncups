@@ -25,7 +25,8 @@ class EditSyncupModel: ObservableObject, Identifiable {
         if syncup.attendees.isEmpty {
             syncup.attendees.append(Attendee(id: Attendee.ID(UUID()), name: ""))
         }
-        focus = .attendee(syncup.attendees[indices.first!].id)
+        let index = min(indices.first!, syncup.attendees.count - 1)
+        focus = .attendee(syncup.attendees[index].id)
     }
     
     func addAttendeeButtonTapped() {
