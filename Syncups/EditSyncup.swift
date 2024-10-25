@@ -8,8 +8,36 @@
 import SwiftUI
 import SwiftUINavigation
 
+class EditSyncupModel: ObservableObject, Identifiable {
+    @Published var syncup: Syncup
+    
+    init(syncup: Syncup) {
+        self.syncup = syncup
+        
+        if syncup.attendees.isEmpty {
+            self.syncup.attendees.append(Attendee(id: Attendee.ID(UUID()), name: ""))
+        }
+        //focus = .title
+    }
+    
+    func deleteAttendees(atOffsets indices: IndexSet) {
+        syncup.attendees.remove(atOffsets: indices)
+        if syncup.attendees.isEmpty {
+            syncup.attendees.append(Attendee(id: Attendee.ID(UUID()), name: ""))
+        }
+        //focus = .attendee(syncup.attendees[indices.first!].id)
+    }
+    
+    func addAttendeeButtonTapped() {
+        let attendee = Attendee(id: Attendee.ID(UUID()), name: "")
+        syncup.attendees.append(attendee)
+        //focus = .attendee(attendee.id)
+    }
+}
+
 struct EditSyncupView: View {
-    @Binding var syncup: Syncup
+    //@Binding var syncup: Syncup
+    @ObservedObject var model: EditSyncupModel
     
     enum Field: Hashable {
         case attendee(Attendee.ID)
@@ -21,48 +49,39 @@ struct EditSyncupView: View {
     var body: some View {
         Form {
             Section {
-                TextField("Title", text: $syncup.title)
+                TextField("Title", text: $model.syncup.title)
                     .focused($focus, equals: .title)
                 HStack {
-                    Slider(value: $syncup.duration.seconds, in: 5...30, step: 1) {
+                    Slider(value: $model.syncup.duration.seconds, in: 5...30, step: 1) {
                         Text("Length")
                     }
                     Spacer()
-                    Text(syncup.duration.formatted(.units()))
+                    Text(model.syncup.duration.formatted(.units()))
                 }
-                ThemePicker(selection: $syncup.theme)
+                ThemePicker(selection: $model.syncup.theme)
             } header: {
                 Text("Sync-up Info")
             }
              
             Section {
-                ForEach($syncup.attendees) { $attendee in
+                ForEach($model.syncup.attendees) { $attendee in
                     TextField("Name", text: $attendee.name)
                         .focused($focus, equals: .attendee(attendee.id))
                 }
                 .onDelete { indices in
-                    //model.deleteAttendees(atOffsets: indices)
-                    syncup.attendees.remove(atOffsets: indices)
-                    if syncup.attendees.isEmpty {
-                        syncup.attendees.append(Attendee(id: Attendee.ID(UUID()), name: ""))
-                    }
-                    focus = .attendee(syncup.attendees[indices.first!].id)
+                    model.deleteAttendees(atOffsets: indices)
+                    focus = .attendee(model.syncup.attendees[indices.first!].id)
                 }
                 
                 Button("New attendee") {
-                    //model.addAttendeeButtonTapped()
-                    let attendee = Attendee(id: Attendee.ID(UUID()), name: "")
-                    syncup.attendees.append(attendee)
-                    focus = .attendee(attendee.id)
+                    model.addAttendeeButtonTapped()
+                    focus = .attendee(model.syncup.attendees.last!.id)
                 }
             } header: {
                 Text("Attendees")
             }
         }
         .onAppear {
-            if syncup.attendees.isEmpty {
-                syncup.attendees.append(Attendee(id: Attendee.ID(UUID()), name: ""))
-            }
             focus = .title
         }
     }
@@ -105,5 +124,5 @@ extension Duration {
 #Preview {
     //PreviewContainer() // pre-iOS18
     @Previewable @State var syncup: Syncup = Syncup.mock
-    EditSyncupView(syncup: $syncup)
+    EditSyncupView(model: EditSyncupModel(syncup: syncup))
 }

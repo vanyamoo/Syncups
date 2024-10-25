@@ -16,7 +16,7 @@ final class SyncupListModel: ObservableObject {
     // models all possible destinations we can navigate to
     @CasePathable //the @CasePathable macro allows one to refer to the cases of an enum with dot-syntax just like one does with structs and properties
     enum Destination {
-        case add(Syncup)
+        case add(EditSyncupModel) // case add(Syncup) // we now pass in the model instead of a simple syncup value
     }
     
     init(destination: Destination? = nil, syncups: [Syncup] = []) {
@@ -29,7 +29,7 @@ final class SyncupListModel: ObservableObject {
         // Note: We are reaching out to this global, uncontrolled dependency for generating a random
         //      UUID. That is going to make testing very difficult, and one of the main reasons to
         //      extract the view’s logic into an observable object is testability.
-        self.destination = .add(Syncup(id: Syncup.ID(UUID())))
+        self.destination = .add(EditSyncupModel(syncup: Syncup(id: Syncup.ID(UUID())))) // we now wrap the syncup in a Model
     }
     
     func dismissAddSyncupButtonTapped() {
@@ -45,7 +45,8 @@ final class SyncupListModel: ObservableObject {
 //            }
 //        }
         
-        guard case var .add(newSyncup) = destination else { return } // var instead of let because we want to massage the data a bit before appending
+        guard case let .add(editSyncupModel) = destination else { return }
+        var newSyncup = editSyncupModel.syncup
         
         newSyncup.attendees.removeAll { attendee in
             attendee.name.allSatisfy(\.isWhitespace) // remove attendees with empty names
@@ -80,20 +81,20 @@ struct SyncupList: View {
 //            .sheet(item: $model.destination.add) { model in
 //                Text("")
 //            }
-            .sheet(item: $model.destination.add) { $syncup in
+            .sheet(item: $model.destination.add) { model in //$syncup in
                 NavigationStack {
-                    EditSyncupView(syncup: $syncup)
+                    EditSyncupView(model: model)
                         .navigationTitle("New Syncup")
                         .toolbar {
                             ToolbarItem(placement: .cancellationAction) {
                                 Button("Dismiss") {
-                                    model.dismissAddSyncupButtonTapped()
+                                    self.model.dismissAddSyncupButtonTapped()
                                 }
                             }
                             
                             ToolbarItem(placement: .confirmationAction) {
                                 Button("Add") {
-                                    model.confirmAddSyncupButtonTapped()
+                                    self.model.confirmAddSyncupButtonTapped()
                                 }
                             }
                         }
