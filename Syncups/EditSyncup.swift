@@ -10,14 +10,14 @@ import SwiftUINavigation
 
 class EditSyncupModel: ObservableObject, Identifiable {
     @Published var syncup: Syncup
+    @Published var focus: EditSyncupView.Field?
     
-    init(syncup: Syncup) {
+    init(focus: EditSyncupView.Field? = .title, syncup: Syncup) {
+        self.focus = focus
         self.syncup = syncup
-        
         if syncup.attendees.isEmpty {
             self.syncup.attendees.append(Attendee(id: Attendee.ID(UUID()), name: ""))
         }
-        //focus = .title
     }
     
     func deleteAttendees(atOffsets indices: IndexSet) {
@@ -25,19 +25,19 @@ class EditSyncupModel: ObservableObject, Identifiable {
         if syncup.attendees.isEmpty {
             syncup.attendees.append(Attendee(id: Attendee.ID(UUID()), name: ""))
         }
-        //focus = .attendee(syncup.attendees[indices.first!].id)
+        focus = .attendee(syncup.attendees[indices.first!].id)
     }
     
     func addAttendeeButtonTapped() {
         let attendee = Attendee(id: Attendee.ID(UUID()), name: "")
         syncup.attendees.append(attendee)
-        //focus = .attendee(attendee.id)
+        focus = .attendee(attendee.id)
     }
 }
 
 struct EditSyncupView: View {
-    //@Binding var syncup: Syncup
-    @ObservedObject var model: EditSyncupModel
+    
+    @ObservedObject var model: EditSyncupModel // @Binding var syncup: Syncup
     
     enum Field: Hashable {
         case attendee(Attendee.ID)
@@ -70,20 +70,16 @@ struct EditSyncupView: View {
                 }
                 .onDelete { indices in
                     model.deleteAttendees(atOffsets: indices)
-                    focus = .attendee(model.syncup.attendees[indices.first!].id)
                 }
                 
                 Button("New attendee") {
                     model.addAttendeeButtonTapped()
-                    focus = .attendee(model.syncup.attendees.last!.id)
                 }
             } header: {
                 Text("Attendees")
             }
         }
-        .onAppear {
-            focus = .title
-        }
+        .bind($model.focus, to: $focus) // in SwiftUINavigation library // we bind our model's focus to our View's focus
     }
 }
 
