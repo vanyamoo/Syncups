@@ -17,6 +17,7 @@ final class SyncupListModel: ObservableObject {
     @CasePathable //the @CasePathable macro allows one to refer to the cases of an enum with dot-syntax just like one does with structs and properties
     enum Destination {
         case add(EditSyncupModel) // case add(Syncup) // we now pass in the model instead of a simple syncup value
+        case detail(SyncupDetailModel)
     }
     
     init(destination: Destination? = nil, syncups: [Syncup] = []) {
@@ -56,6 +57,10 @@ final class SyncupListModel: ObservableObject {
         }
         syncups.append(newSyncup)
     }
+    
+    func syncupTapped(syncup: Syncup) {
+        destination = .detail(SyncupDetailModel(syncup: syncup))
+    }
 }
 
 struct SyncupList: View {
@@ -66,8 +71,12 @@ struct SyncupList: View {
         NavigationStack {
             List {
                 ForEach(model.syncups) { syncup in
-                    CardView(syncup: syncup)
-                        .listRowBackground(syncup.theme.mainColor)
+                    Button {
+                        model.syncupTapped(syncup: syncup)
+                    } label: {
+                        CardView(syncup: syncup)
+                            .listRowBackground(syncup.theme.mainColor)
+                    }
                 }
             }
             .toolbar {
@@ -96,6 +105,9 @@ struct SyncupList: View {
                             }
                         }
                 }
+            }
+            .navigationDestination(item: $model.destination.detail) { detailModel in
+                SyncupDetailView(model: detailModel)
             }
         }
     }

@@ -18,6 +18,7 @@ class SyncupDetailModel: ObservableObject {
 struct SyncupDetailView: View {
     
     @ObservedObject var model: SyncupDetailModel
+    
     var body: some View {
         List {
             Section {
