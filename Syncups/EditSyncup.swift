@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import SwiftUINavigation
+//import SwiftUINavigation
 
 class EditSyncupModel: ObservableObject, Identifiable {
     @Published var syncup: Syncup

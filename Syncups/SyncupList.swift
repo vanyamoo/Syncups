@@ -78,9 +78,6 @@ struct SyncupList: View {
                 }
             }
             .navigationTitle("Daily Syncups")
-//            .sheet(item: $model.destination.add) { model in
-//                Text("")
-//            }
             .sheet(item: $model.destination.add) { model in //$syncup in
                 NavigationStack {
                     EditSyncupView(model: model)
