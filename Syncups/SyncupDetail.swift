@@ -107,11 +107,16 @@ struct SyncupDetailView: View {
                 
             }
         }
-//        .navigationDestination(item: $model.destination.meeting) { meeting in
+        .navigationDestination(item: $model.destination.meeting) { $meeting in
+            NavigationStack {
+                MeetingView(meeting: meeting, syncup: model.syncup)
+            }
+        }
+//        .sheet(item: $model.destination.meeting) { meeting in
 //            MeetingView(meeting: meeting, syncup: model.syncup)
 //        }
-        .sheet(item: $model.destination.meeting) { meeting in
-            MeetingView(meeting: meeting, syncup: model.syncup)
+        .alert($model.destination.alert) { action in
+            await model.alertButtonTapped(action)
         }
     }
 }
@@ -142,8 +147,10 @@ struct MeetingView: View {
 }
 
 #Preview {
-    //SyncupDetailView(model: SyncupDetailModel(destination: .meeting(Syncup.mock.meetings[0]), syncup: .mock))
     NavigationStack {
-        SyncupDetailView(model: SyncupDetailModel(syncup: .mock))
+        SyncupDetailView(model: SyncupDetailModel(destination: .meeting(Syncup.mock.meetings[0]), syncup: .mock))
     }
+//    NavigationStack {
+//        SyncupDetailView(model: SyncupDetailModel(syncup: .mock))
+//    }
 }

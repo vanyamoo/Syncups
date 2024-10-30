@@ -106,12 +106,12 @@ struct SyncupList: View {
                         }
                 }
             }
-//            .navigationDestination(item: $model.destination.detail) { detailModel in
-//                SyncupDetailView(model: detailModel)
-//            }
-            .sheet(item: $model.destination.detail) { detailModel in
+            .navigationDestination(item: $model.destination.detail) { $detailModel in
                 SyncupDetailView(model: detailModel)
             }
+//            .sheet(item: $model.destination.detail) { detailModel in
+//                SyncupDetailView(model: detailModel)
+//            }
         }
     }
 }
@@ -169,6 +169,10 @@ extension LabelStyle where Self == TrailingIconLabelStyle {
 #Preview {
     SyncupList(
         model: SyncupListModel(
+            destination: .detail(
+                SyncupDetailModel(
+                    //destination: .meeting(Syncup.mock.meetings[0]),
+                    syncup: .mock)),
 //            destination: .add(
 //                EditSyncupModel(
 //                    focus: .attendee(Syncup.mock.attendees[3].id),
