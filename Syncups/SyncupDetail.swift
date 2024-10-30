@@ -14,7 +14,12 @@ class SyncupDetailModel: ObservableObject, Identifiable {
     
     @CasePathable
     enum Destination {
+        case alert(AlertState<AlertAction>)
         case meeting(Meeting) // we use a little plain struct Meeting for the associated value because the historical meeting View doesn't need a full-blown @ObservableObject
+    }
+    
+    enum AlertAction {
+        case confirmDeletion
     }
     
     init(destination: Destination? = nil, syncup: Syncup) { // we want to be able to instantiate the model with the destination (because this allows deep linking)
@@ -29,6 +34,18 @@ class SyncupDetailModel: ObservableObject, Identifiable {
     func meetingTapped(_ meeting: Meeting) {
         destination = .meeting(meeting)
     }
+    
+    func deleteButtonTapped() {
+        destination = .alert(.deleteSyncup)
+    }
+    
+    func alertButtonTapped(_ action: AlertAction) {
+        switch action {
+        case .confirmDeletion:
+            print("Delete")
+            //deleteMeetings(atOffsets: syncup.meetings.indices)
+        }
+    }
 }
 
 struct SyncupDetailView: View {
@@ -37,69 +54,13 @@ struct SyncupDetailView: View {
     
     var body: some View {
         List {
-            Section {
-                Button {
-                    //model.startMeetingButtonTapped()
-                } label: {
-                    Label("Start Meeting", systemImage: "timer")
-                        .font(.headline)
-                        .foregroundColor(.accentColor)
-                }
-                HStack {
-                    Label("Length", systemImage: "clock")
-                    Spacer()
-                    Text(model.syncup.duration.formatted(.units()))
-                }
-                
-                HStack {
-                    Label("Theme", systemImage: "paintpalette")
-                    Spacer()
-                    Text(model.syncup.theme.name)
-                        .padding(4)
-                        .foregroundColor(model.syncup.theme.accentColor)
-                        .background(model.syncup.theme.mainColor)
-                        .cornerRadius(4)
-                }
-            } header: {
-                Text("Sync-up Info")
-            }
+            syncupInfo
             
-            if !model.syncup.meetings.isEmpty {
-                Section {
-                    ForEach(model.syncup.meetings) { meeting in
-                        Button {
-                            model.meetingTapped(meeting)
-                        } label: {
-                            HStack {
-                                Image(systemName: "calendar")
-                                Text(meeting.date, style: .date)
-                                Text(meeting.date, style: .time)
-                            }
-                        }
-                    }
-                    .onDelete { indices in
-                        model.deleteMeetings(atOffsets: indices)
-                    }
-                } header: {
-                    Text("Past meetings")
-                }
-            }
+            pastMeetings
             
-            Section {
-                ForEach(model.syncup.attendees) { attendee in
-                    Label(attendee.name, systemImage: "person")
-                }
-            } header: {
-                Text("Attendees")
-            }
+            attendees
             
-            Section {
-                Button("Delete") {
-                    //model.deleteButtonTapped()
-                }
-                .foregroundColor(.red)
-                .frame(maxWidth: .infinity)
-            }
+            delete
         }
         .navigationTitle(model.syncup.title)
         .toolbar {
@@ -116,8 +77,99 @@ struct SyncupDetailView: View {
 //            MeetingView(meeting: meeting, syncup: model.syncup)
 //        }
         .alert($model.destination.alert) { action in
-            await model.alertButtonTapped(action)
+            if let action {
+                model.alertButtonTapped(action) //await model.alertButtonTapped(action)
+            }
+            
         }
+    }
+    
+    private var syncupInfo: some View {
+        Section {
+            Button {
+                //model.startMeetingButtonTapped()
+            } label: {
+                Label("Start Meeting", systemImage: "timer")
+                    .font(.headline)
+                    .foregroundColor(.accentColor)
+            }
+            HStack {
+                Label("Length", systemImage: "clock")
+                Spacer()
+                Text(model.syncup.duration.formatted(.units()))
+            }
+            
+            HStack {
+                Label("Theme", systemImage: "paintpalette")
+                Spacer()
+                Text(model.syncup.theme.name)
+                    .padding(4)
+                    .foregroundColor(model.syncup.theme.accentColor)
+                    .background(model.syncup.theme.mainColor)
+                    .cornerRadius(4)
+            }
+        } header: {
+            Text("Sync-up Info")
+        }
+    }
+    
+    @ViewBuilder
+    private var pastMeetings: some View {
+        if !model.syncup.meetings.isEmpty {
+            Section {
+                ForEach(model.syncup.meetings) { meeting in
+                    Button { // NavigationLink(destination: MeetingView(meeting: meeting, syncup: model.syncup)) {
+                        model.meetingTapped(meeting)
+                    } label: {
+                        HStack {
+                            Image(systemName: "calendar")
+                            Text(meeting.date, style: .date)
+                            Text(meeting.date, style: .time)
+                        }
+                    }
+                }
+                .onDelete { indices in
+                    model.deleteMeetings(atOffsets: indices)
+                }
+            } header: {
+                Text("Past meetings")
+            }
+        }
+    }
+    
+    private var attendees: some View {
+        Section {
+            ForEach(model.syncup.attendees) { attendee in
+                Label(attendee.name, systemImage: "person")
+            }
+        } header: {
+            Text("Attendees")
+        }
+    }
+    
+    private var delete: some View {
+        Section {
+            Button("Delete") {
+                model.deleteButtonTapped()
+            }
+            .foregroundColor(.red)
+            .frame(maxWidth: .infinity)
+        }
+    }
+}
+
+extension AlertState where Action == SyncupDetailModel.AlertAction {
+    static let deleteSyncup = Self {
+        TextState("Delete?")
+    } actions: {
+        ButtonState(role: .destructive, action: .confirmDeletion) {
+            TextState("Yes")
+        }
+        ButtonState(role: .cancel) {
+            TextState("Nevermind")
+        }
+    } message: {
+        TextState("Are you sure you want to delete this sync-up?")
     }
 }
 
@@ -150,6 +202,12 @@ struct MeetingView: View {
     NavigationStack {
         SyncupDetailView(model: SyncupDetailModel(destination: .meeting(Syncup.mock.meetings[0]), syncup: .mock))
     }
+    
+//    NavigationStack {
+//        SyncupDetailView(model: SyncupDetailModel(destination:
+//            .alert(.deleteSyncup), syncup: .mock))
+//    }
+
 //    NavigationStack {
 //        SyncupDetailView(model: SyncupDetailModel(syncup: .mock))
 //    }
