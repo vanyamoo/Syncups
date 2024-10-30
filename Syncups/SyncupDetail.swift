@@ -7,10 +7,13 @@
 
 import SwiftUINavigation
 import SwiftUI
+import XCTestDynamicOverlay
 
 class SyncupDetailModel: ObservableObject, Identifiable {
     @Published var destination: Destination?
     @Published var syncup: Syncup
+    
+    var onConfirmDeletion: () -> Void = unimplemented("SyncupDetailModel.onConfirmDeletion")
     
     @CasePathable
     enum Destination {
@@ -42,8 +45,7 @@ class SyncupDetailModel: ObservableObject, Identifiable {
     func alertButtonTapped(_ action: AlertAction) {
         switch action {
         case .confirmDeletion:
-            print("Delete")
-            //deleteMeetings(atOffsets: syncup.meetings.indices)
+            onConfirmDeletion()
         }
     }
 }
@@ -51,6 +53,8 @@ class SyncupDetailModel: ObservableObject, Identifiable {
 struct SyncupDetailView: View {
     
     @ObservedObject var model: SyncupDetailModel
+    
+    //let onConfirnDeletion: () -> Void
     
     var body: some View {
         List {
@@ -80,7 +84,6 @@ struct SyncupDetailView: View {
             if let action {
                 model.alertButtonTapped(action) //await model.alertButtonTapped(action)
             }
-            
         }
     }
     

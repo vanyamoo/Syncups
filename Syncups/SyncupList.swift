@@ -11,8 +11,10 @@ import SwiftUI
 final class SyncupListModel: ObservableObject {
     @Published var syncups: [Syncup]
     //@Published var addSyncup: Syncup? // nill - the addSyncup sheet is presented, non-nill - the sheet is presented
-    @Published var destination: Destination? // (instead of addSyncup) we hold on to a single piece of state to represent us navigating to a destination, but it's Optional (nill represents we are not navigated anywhere, and non-nill represents we are navigated to one of the Destinations)
-    
+    @Published var destination: Destination? {// (instead of addSyncup) we hold on to a single piece of state to represent us navigating to a destination, but it's Optional (nill represents we are not navigated anywhere, and non-nill represents we are navigated to one of the Destinations)
+        didSet { bind() } // bind to the onConfirmDeletion closure (SyncupDetail) // we are now intergrating a parent and a child features together so they can now communicate with each other
+    }
+        
     // models all possible destinations we can navigate to
     @CasePathable //the @CasePathable macro allows one to refer to the cases of an enum with dot-syntax just like one does with structs and properties
     enum Destination {
@@ -23,6 +25,7 @@ final class SyncupListModel: ObservableObject {
     init(destination: Destination? = nil, syncups: [Syncup] = []) {
         self.destination = destination // we add destination to init because whoever creates the model will have the oportunity to have destination hydrated and that's what unlocks deep linking capabilities
         self.syncups = syncups
+        bind() // bind to the onConfirmDeletion closure (SyncupDetail)
     }
     
     func addSyncupButtonTapped() {
@@ -60,6 +63,24 @@ final class SyncupListModel: ObservableObject {
     
     func syncupTapped(syncup: Syncup) {
         destination = .detail(SyncupDetailModel(syncup: syncup))
+    }
+    
+    // bind() binds to the onConfirmDeletion closure anytime the destination switches to .detail
+    private func bind() {
+        switch destination {
+        case let.detail(syncupDetailModel):
+            syncupDetailModel.onConfirmDeletion = { [weak self, id = syncupDetailModel.syncup.id] in // to avoid a retain cycle we capture self weakly, and also capture teh id of the syncup
+                guard let self else { return } // we unwrap self, otherwise early out  // this is instead of if let self {...}
+                withAnimation {
+                    self.syncups.removeAll { $0.id == id } // delete the item in the array
+                    self.destination = nil // pop that screen off the stack
+                }
+            }
+            break
+            
+        case .add, .none:
+            break
+        }
     }
 }
 

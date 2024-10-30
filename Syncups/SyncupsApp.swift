@@ -14,11 +14,11 @@ struct SyncupsApp: App {
             
             SyncupList(
                 model: SyncupListModel(
-                    destination: .detail(
-                        SyncupDetailModel(
-                            //destination: .meeting(Syncup.mock.meetings[0]),
-                            destination: .alert(.deleteSyncup),
-                            syncup: .mock)),
+//                    destination: .detail(
+//                        SyncupDetailModel(
+//                            //destination: .meeting(Syncup.mock.meetings[0]),
+//                            destination: .alert(.deleteSyncup),
+//                            syncup: .mock)),
                     syncups: [.mock, .engineeringMock, .designMock]))
             
 //            SyncupList(
