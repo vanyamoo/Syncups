@@ -18,6 +18,7 @@ class SyncupDetailModel: ObservableObject, Identifiable {
     @CasePathable
     enum Destination {
         case alert(AlertState<AlertAction>)
+        case edit(EditSyncupModel)
         case meeting(Meeting) // we use a little plain struct Meeting for the associated value because the historical meeting View doesn't need a full-blown @ObservableObject
     }
     
@@ -48,6 +49,21 @@ class SyncupDetailModel: ObservableObject, Identifiable {
             onConfirmDeletion()
         }
     }
+    
+    func editButtonTapped() {
+        destination = .edit(EditSyncupModel(syncup: syncup))
+    }
+    
+    func doneEdittingButtonTapped() {
+        guard case let .edit(editModel) = destination else { return }
+        
+        syncup = editModel.syncup
+        destination = nil
+    }
+    
+    func cancelEditButtonTapped() {
+        destination = nil
+    }
 }
 
 struct SyncupDetailView: View {
@@ -69,7 +85,7 @@ struct SyncupDetailView: View {
         .navigationTitle(model.syncup.title)
         .toolbar {
             Button("Edit") {
-                
+                model.editButtonTapped()
             }
         }
         .navigationDestination(item: $model.destination.meeting) { $meeting in
@@ -83,6 +99,24 @@ struct SyncupDetailView: View {
         .alert($model.destination.alert) { action in
             if let action {
                 model.alertButtonTapped(action) //await model.alertButtonTapped(action)
+            }
+        }
+        .sheet(item: $model.destination.edit) { $editModel in
+            NavigationStack {
+                EditSyncupView(model: editModel)
+                    .navigationTitle(model.syncup.title)
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Cancel") {
+                                model.cancelEditButtonTapped()
+                            }
+                        }
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Done") {
+                                model.doneEdittingButtonTapped()
+                            }
+                        }
+                    }
             }
         }
     }
