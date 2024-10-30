@@ -5,15 +5,15 @@
 //  Created by Vanya Mutafchieva on 23/10/2024.
 //
 
-import Foundation
+import IdentifiedCollections
 import SwiftUI
 import Tagged
 
 struct Syncup: Identifiable, Codable, Equatable {
     let id: Tagged<Self, UUID> // Tagged version of the UUID tagging with Self (which is a Syncup)
-    var attendees: [Attendee] = []
+    var attendees: IdentifiedArrayOf<Attendee> = []
     var duration = Duration.seconds(60 * 5)
-    var meetings: [Meeting] = []
+    var meetings: IdentifiedArrayOf<Meeting> = []
     var theme: Theme = .bubblegum
     var title = ""
     
