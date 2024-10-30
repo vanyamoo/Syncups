@@ -7,6 +7,7 @@
 
 import SwiftUINavigation
 import SwiftUI
+import Combine
 
 final class SyncupListModel: ObservableObject {
     @Published var syncups: [Syncup]
@@ -14,6 +15,8 @@ final class SyncupListModel: ObservableObject {
     @Published var destination: Destination? {// (instead of addSyncup) we hold on to a single piece of state to represent us navigating to a destination, but it's Optional (nill represents we are not navigated anywhere, and non-nill represents we are navigated to one of the Destinations)
         didSet { bind() } // bind to the onConfirmDeletion closure (SyncupDetail) // we are now intergrating a parent and a child features together so they can now communicate with each other
     }
+    
+    private var destinationCancellable: AnyCancellable? // specifically used when we need to subscribe to updates in a destination
         
     // models all possible destinations we can navigate to
     @CasePathable //the @CasePathable macro allows one to refer to the cases of an enum with dot-syntax just like one does with structs and properties
@@ -76,7 +79,14 @@ final class SyncupListModel: ObservableObject {
                     self.destination = nil // pop that screen off the stack
                 }
             }
-            break
+            
+            // Note: this model binding logic is getting a bit complex!! but the amazing thing is that because it's all (parent and child features) integrated together at the model level it'a all 100% testable
+            destinationCancellable = syncupDetailModel.$syncup // syncupDetailModel.$syncup - @Published property syncup, which is a Publisher that emits any time this syncup changes
+                .sink { [weak self] syncup in // so we sink on it so we can get access to the newest syncup (and we don't want any retain cycles)
+                    guard let self else { return }  // we unwrap it
+                    guard let index = syncups.firstIndex(where: { $0.id == syncup.id }) else { return }
+                    syncups[index] = syncup // and mutate our syncups with this new syncup
+                }
             
         case .add, .none:
             break

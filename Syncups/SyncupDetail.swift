@@ -97,9 +97,8 @@ struct SyncupDetailView: View {
 //            MeetingView(meeting: meeting, syncup: model.syncup)
 //        }
         .alert($model.destination.alert) { action in
-            if let action {
-                model.alertButtonTapped(action) //await model.alertButtonTapped(action)
-            }
+            guard let action else { return }
+            model.alertButtonTapped(action) //await model.alertButtonTapped(action)
         }
         .sheet(item: $model.destination.edit) { $editModel in
             NavigationStack {
