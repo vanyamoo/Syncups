@@ -75,8 +75,8 @@ struct SyncupList: View {
                         model.syncupTapped(syncup: syncup)
                     } label: {
                         CardView(syncup: syncup)
-                            .listRowBackground(syncup.theme.mainColor)
                     }
+                    .listRowBackground(syncup.theme.mainColor)
                 }
             }
             .toolbar {
@@ -106,7 +106,10 @@ struct SyncupList: View {
                         }
                 }
             }
-            .navigationDestination(item: $model.destination.detail) { detailModel in
+//            .navigationDestination(item: $model.destination.detail) { detailModel in
+//                SyncupDetailView(model: detailModel)
+//            }
+            .sheet(item: $model.destination.detail) { detailModel in
                 SyncupDetailView(model: detailModel)
             }
         }
@@ -144,12 +147,35 @@ struct CardView: View {
     }
     
     private var minutesLabel: some View {
-        Label("\(syncup.duration)", systemImage: "clock")
-            .accessibilityLabel("\(syncup.duration) minute meeting")
-            //.labelStyle(.trailingIcon)
+        Label("\(syncup.duration.formatted(.units()))", systemImage: "clock")
+            .accessibilityLabel("\(syncup.duration.formatted(.units())) minute meeting")
+            .labelStyle(.trailingIcon)
     }
 }
 
+struct TrailingIconLabelStyle: LabelStyle {
+  func makeBody(configuration: Configuration) -> some View {
+    HStack {
+      configuration.title
+      configuration.icon
+    }
+  }
+}
+
+extension LabelStyle where Self == TrailingIconLabelStyle {
+  static var trailingIcon: Self { Self() }
+}
+
 #Preview {
-    SyncupList(model: SyncupListModel(syncups: [.mock]))
+    SyncupList(
+        model: SyncupListModel(
+//            destination: .add(
+//                EditSyncupModel(
+//                    focus: .attendee(Syncup.mock.attendees[3].id),
+//                    syncup: .mock)),
+            syncups: [
+                .mock,
+            ]
+        )
+    )
 }

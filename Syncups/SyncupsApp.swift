@@ -11,7 +11,25 @@ import SwiftUI
 struct SyncupsApp: App {
     var body: some Scene {
         WindowGroup {
-            SyncupList(model: SyncupListModel())
+            
+            SyncupList(model: SyncupListModel(
+                            destination: .detail(
+                                SyncupDetailModel(
+                                    //destination: .meeting(Syncup.mock.meetings[0]),
+                                                  syncup: .mock)),
+                                        syncups: [.mock, .engineeringMock, .designMock]))
+            
+//            SyncupList(
+//                model: SyncupListModel(
+//                    destination: .add(
+//                        EditSyncupModel(
+//                            focus: .attendee(Syncup.mock.attendees[3].id),
+//                            syncup: .mock)),
+//                    syncups: [
+//                        .mock,
+//                    ]
+//                )
+//            )
         }
     }
 }
