@@ -12,14 +12,19 @@ struct SyncupsApp: App {
     var body: some Scene {
         WindowGroup {
             
+            var syncup = Syncup.mock
+            let _ = syncup.duration = .seconds(6)
+            
             SyncupList(
                 model: SyncupListModel(
-//                    destination: .detail(
-//                        SyncupDetailModel(
-//                            //destination: .meeting(Syncup.mock.meetings[0]),
-//                            destination: .alert(.deleteSyncup),
-//                            syncup: .mock)),
+                    destination: .detail(
+                        SyncupDetailModel(
+                            //destination: .meeting(Syncup.mock.meetings[0]),
+                            destination: .record(RecordMeetingModel(syncup: syncup)),
+                            syncup: .mock)),
                     syncups: [.mock, .engineeringMock, .designMock]))
+            
+            
             
 //            SyncupList(
 //                model: SyncupListModel(

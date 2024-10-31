@@ -10,7 +10,11 @@ import SwiftUI
 import XCTestDynamicOverlay
 
 class SyncupDetailModel: ObservableObject, Identifiable {
-    @Published var destination: Destination?
+    @Published var destination: Destination? {
+        didSet {
+            bind()
+        }
+    }
     @Published var syncup: Syncup
     
     var onConfirmDeletion: () -> Void = unimplemented("SyncupDetailModel.onConfirmDeletion")
@@ -30,6 +34,7 @@ class SyncupDetailModel: ObservableObject, Identifiable {
     init(destination: Destination? = nil, syncup: Syncup) { // we want to be able to instantiate the model with the destination (because this allows deep linking)
         self.destination = destination
         self.syncup = syncup
+        bind()
     }
     
     func deleteMeetings(atOffsets indices: IndexSet) {
@@ -68,6 +73,20 @@ class SyncupDetailModel: ObservableObject, Identifiable {
     
     func startMeetingButtonTapped() {
         destination = .record(RecordMeetingModel(syncup: syncup))
+    }
+    
+    private func bind() {
+        switch destination {
+        case let .record(recordMeetingModel):
+            recordMeetingModel.onMeetingFinished = { [weak self] in
+                guard let self else { return }
+                // to do: append the meeting transcript to the history
+                self.destination = nil
+            }
+            
+        case .alert, .edit, .meeting, .none:
+            break
+        }
     }
 }
 
