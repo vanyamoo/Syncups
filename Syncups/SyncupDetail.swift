@@ -20,6 +20,7 @@ class SyncupDetailModel: ObservableObject, Identifiable {
         case alert(AlertState<AlertAction>)
         case edit(EditSyncupModel)
         case meeting(Meeting) // we use a little plain struct Meeting for the associated value because the historical meeting View doesn't need a full-blown @ObservableObject
+        case record(RecordMeetingModel)
     }
     
     enum AlertAction {
@@ -64,6 +65,10 @@ class SyncupDetailModel: ObservableObject, Identifiable {
     func cancelEditButtonTapped() {
         destination = nil
     }
+    
+    func startMeetingButtonTapped() {
+        destination = .record(RecordMeetingModel(syncup: syncup))
+    }
 }
 
 struct SyncupDetailView: View {
@@ -96,6 +101,11 @@ struct SyncupDetailView: View {
 //        .sheet(item: $model.destination.meeting) { meeting in
 //            MeetingView(meeting: meeting, syncup: model.syncup)
 //        }
+        .navigationDestination(item: $model.destination.record) { $recordModel in
+            NavigationStack {
+                RecordMeetingView(model: recordModel)
+            }
+        }
         .alert($model.destination.alert) { action in
             guard let action else { return }
             model.alertButtonTapped(action) //await model.alertButtonTapped(action)
@@ -123,7 +133,7 @@ struct SyncupDetailView: View {
     private var syncupInfo: some View {
         Section {
             Button {
-                //model.startMeetingButtonTapped()
+                model.startMeetingButtonTapped()
             } label: {
                 Label("Start Meeting", systemImage: "timer")
                     .font(.headline)
