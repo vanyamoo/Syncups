@@ -6,19 +6,33 @@
 //
 
 import SwiftUI
+import SwiftNavigation
 import XCTestDynamicOverlay
 
 class RecordMeetingModel: ObservableObject {
-    let syncup: Syncup
+    
+    @Published var destination: Destination?
+    var isDismissed = false
     @Published var secondsElapsed = 0
     @Published var speakerIndex = 0
     var onMeetingFinished: () -> Void = unimplemented("RecordMeetingModel.onMeetingFinished")
+    let syncup: Syncup
+    
+    @CasePathable
+    enum Destination {
+        case alert(AlertState<AlertAction>)
+    }
+    enum AlertAction {
+        case confirmSave
+        case confirmDiscard
+    }
     
     var durationRemaining: Duration {
         syncup.duration - .seconds(secondsElapsed)
     }
     
-    init(syncup: Syncup) {
+    init(destination: Destination? = nil, syncup: Syncup) {
+        self.destination = destination
         self.syncup = syncup
     }
     
@@ -27,6 +41,31 @@ class RecordMeetingModel: ObservableObject {
     }
     
     func endMeetingButtonTapped() {
+        destination = .alert(.endMeeting(isDiscardable: true))
+    }
+    
+//    func alertButtonTapped(_ action: AlertAction?) async {
+//        switch action {
+//        case .confirmSave?:
+//          await finishMeeting()
+//        case .confirmDiscard?:
+//          isDismissed = true
+//        case nil:
+//          break
+//        }
+//      }
+    func alertButtonTapped(_ action: AlertAction?) {
+        switch action {
+        case .confirmSave:
+            onMeetingFinished()
+            isDismissed = true
+        case .confirmDiscard:
+            isDismissed = true
+//        case nil:
+//          break
+        case .none:
+            break
+        }
         
     }
     
@@ -35,7 +74,7 @@ class RecordMeetingModel: ObservableObject {
         // one way to start a very basic timer is to start an infinite loop and do a sleep on the inside
         do {
             while true {
-                // NOTE: this is not the best way to implement a timer, it is very imprecise. But we'll keep it for now. We'll address teh issue of dependencies and testing later on.
+                // NOTE: this is not the best way to implement a timer, it is very imprecise. But we'll keep it for now. We'll address the issue of dependencies and testing later on.
                 try await Task.sleep(for: .seconds(1)) // Task.sleep can throw, and that happens when the asynchronous context is cancelled, so we need to wrap it in a do {} catch {}, bacause we don't want task() to throw since we can't throw over in the View
                 secondsElapsed += 1
                 
@@ -52,6 +91,28 @@ class RecordMeetingModel: ObservableObject {
             }
         } catch {
             
+        }
+    }
+}
+
+extension AlertState where Action == RecordMeetingModel.AlertAction {
+    static func endMeeting(isDiscardable: Bool) -> Self {
+        Self {
+            TextState("End meeting?")
+        } actions: {
+            ButtonState(action: .confirmSave) {
+                TextState("Save and end")
+            }
+            if isDiscardable {
+                ButtonState(role: .destructive, action: .confirmDiscard) {
+                    TextState("Discard")
+                }
+            }
+            ButtonState(role: .cancel) {
+                TextState("Resume")
+            }
+        } message: {
+            TextState("You are ending the meeting early. What would you like to do?")
         }
     }
 }
@@ -97,6 +158,9 @@ struct RecordMeetingView: View {
 //            }
             .task { await model.task() } // Add Timer behaviour - we need a method that can access the kickoff point for the View appearing and SwiftUI's .task ViewModifier is really nice for this. In the closure we get a little asynchronous context to execute work and when the View goes away that asynchronous context is cancelled, and that can be really handy for automatically tearing down work, and that will automatically stop our timer
 //            .onChange(of: self.model.isDismissed) { _, _ in self.dismiss() }
+            .alert(self.$model.destination.alert) { action in
+                self.model.alertButtonTapped(action)
+            }
     }
 }
 
