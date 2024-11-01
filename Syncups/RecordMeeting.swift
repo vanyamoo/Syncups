@@ -36,6 +36,15 @@ class RecordMeetingModel: ObservableObject {
         self.syncup = syncup
     }
     
+    var isAlertOpen: Bool {
+        switch destination {
+        case .alert:
+            return true
+        case .none:
+            return false
+        }
+    }
+    
     func nextButtonTapped() {
         
     }
@@ -76,6 +85,7 @@ class RecordMeetingModel: ObservableObject {
             while true {
                 // NOTE: this is not the best way to implement a timer, it is very imprecise. But we'll keep it for now. We'll address the issue of dependencies and testing later on.
                 try await Task.sleep(for: .seconds(1)) // Task.sleep can throw, and that happens when the asynchronous context is cancelled, so we need to wrap it in a do {} catch {}, bacause we don't want task() to throw since we can't throw over in the View
+                guard !isAlertOpen else { continue } // pause timer when alert is presented
                 secondsElapsed += 1
                 
                 if secondsElapsed.isMultiple(of:
