@@ -46,7 +46,16 @@ class RecordMeetingModel: ObservableObject {
     }
     
     func nextButtonTapped() {
+        guard speakerIndex < syncup.attendees.count - 1
+        else {
+            //onMeetingFinished()
+            //isDismissed = true
+            destination = .alert(.endMeeting(isDiscardable: false))
+            return
+        }
         
+        speakerIndex += 1
+        secondsElapsed = speakerIndex * Int(syncup.durationPerAttendee.components.seconds)
     }
     
     func endMeetingButtonTapped() {
