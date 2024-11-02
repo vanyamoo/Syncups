@@ -82,9 +82,16 @@ class SyncupDetailModel: ObservableObject, Identifiable {
             recordMeetingModel.onMeetingFinished = { [weak self] transcript in
                 guard let self else { return }
                 // to do: append the meeting transcript to the history
-                self.syncup.meetings.insert(
-                    Meeting(id: Meeting.ID(UUID()), date: Date(), transcript: transcript),
-                    at: 0)
+                
+                Task {
+                    try? await Task.sleep(for: .milliseconds(400))
+                    _ = withAnimation {
+                        self.syncup.meetings.insert(
+                            Meeting(id: Meeting.ID(UUID()), date: Date(), transcript: transcript),
+                            at: 0)
+                    }
+                }
+                
                 self.destination = nil
             }
             
@@ -269,7 +276,13 @@ struct MeetingView: View {
 
 #Preview {
     NavigationStack {
-        SyncupDetailView(model: SyncupDetailModel(destination: .meeting(Syncup.mock.meetings[0]), syncup: .mock))
+        var syncup = Syncup.mock
+        let _ = syncup.duration = .seconds(1)
+        let _ = syncup.attendees = [.init(id: Attendee.ID(UUID()), name: "John Doe")]
+        SyncupDetailView(
+            model: SyncupDetailModel(
+                destination: .record(RecordMeetingModel(syncup: syncup)),
+                syncup: .mock))
     }
     
 //    NavigationStack {

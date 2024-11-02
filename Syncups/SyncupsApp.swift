@@ -13,7 +13,8 @@ struct SyncupsApp: App {
         WindowGroup {
             
             var syncup = Syncup.mock
-            let _ = syncup.duration = .seconds(6)
+            let _ = syncup.duration = .seconds(1)
+            let _ = syncup.attendees = [.init(id: Attendee.ID(UUID()), name: "John Doe")]
             
             SyncupList(
                 model: SyncupListModel(
