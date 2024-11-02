@@ -10,6 +10,7 @@ import IdentifiedCollections
 import SwiftUINavigation
 import SwiftUI
 
+@MainActor
 final class SyncupListModel: ObservableObject {
     @Published var syncups: IdentifiedArrayOf<Syncup> // [Syncup]
     //@Published var addSyncup: Syncup? // nill - the addSyncup sheet is presented, non-nill - the sheet is presented

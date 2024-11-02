@@ -14,6 +14,7 @@
 		4E9647452CCA5C4000C6995B /* SwiftNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 4E9647442CCA5C4000C6995B /* SwiftNavigation */; };
 		4E9647472CCA5C4000C6995B /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 4E9647462CCA5C4000C6995B /* SwiftUINavigation */; };
 		4E9647492CCA5C4000C6995B /* UIKitNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 4E9647482CCA5C4000C6995B /* UIKitNavigation */; };
+		4EA6FF4D2CD66BFA00B4537F /* Speech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EA6FF4C2CD66BFA00B4537F /* Speech.framework */; };
 		4EB425B82CD29631003222B7 /* IdentifiedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 4EB425B72CD29631003222B7 /* IdentifiedCollections */; };
 /* End PBXBuildFile section */
 
@@ -30,6 +31,7 @@
 /* Begin PBXFileReference section */
 		4E9647222CC9474700C6995B /* Syncups.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Syncups.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E9648292CCBB73B00C6995B /* SyncupsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SyncupsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4EA6FF4C2CD66BFA00B4537F /* Speech.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Speech.framework; path = System/Library/Frameworks/Speech.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -51,6 +53,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4E9647492CCA5C4000C6995B /* UIKitNavigation in Frameworks */,
+				4EA6FF4D2CD66BFA00B4537F /* Speech.framework in Frameworks */,
 				4EB425B82CD29631003222B7 /* IdentifiedCollections in Frameworks */,
 				4E96473B2CC94C4600C6995B /* Tagged in Frameworks */,
 				4E9647432CCA5C4000C6995B /* AppKitNavigation in Frameworks */,
@@ -93,6 +96,7 @@
 		4E9647412CCA5C4000C6995B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4EA6FF4C2CD66BFA00B4537F /* Speech.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

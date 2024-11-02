@@ -5,17 +5,21 @@
 //  Created by Vanya Mutafchieva on 30/10/2024.
 //
 
+@preconcurrency import Speech
 import SwiftUI
 import SwiftNavigation
 import XCTestDynamicOverlay
 
+
+@MainActor
 class RecordMeetingModel: ObservableObject {
     
     @Published var destination: Destination?
     var isDismissed = false
     @Published var secondsElapsed = 0
     @Published var speakerIndex = 0
-    var onMeetingFinished: () -> Void = unimplemented("RecordMeetingModel.onMeetingFinished")
+    private var transcript = ""
+    var onMeetingFinished: (String) -> Void = unimplemented("RecordMeetingModel.onMeetingFinished")
     let syncup: Syncup
     
     @CasePathable
@@ -75,7 +79,7 @@ class RecordMeetingModel: ObservableObject {
     func alertButtonTapped(_ action: AlertAction?) {
         switch action {
         case .confirmSave:
-            onMeetingFinished()
+            onMeetingFinished(transcript)
             isDismissed = true
         case .confirmDiscard:
             isDismissed = true
@@ -87,29 +91,62 @@ class RecordMeetingModel: ObservableObject {
         
     }
     
-    @MainActor
     func task() async { // now we have a little spot in the model to start adding some asynchronous behaviour
         // one way to start a very basic timer is to start an infinite loop and do a sleep on the inside
         do {
-            while true {
-                // NOTE: this is not the best way to implement a timer, it is very imprecise. But we'll keep it for now. We'll address the issue of dependencies and testing later on.
-                try await Task.sleep(for: .seconds(1)) // Task.sleep can throw, and that happens when the asynchronous context is cancelled, so we need to wrap it in a do {} catch {}, bacause we don't want task() to throw since we can't throw over in the View
-                guard !isAlertOpen else { continue } // pause timer when alert is presented
-                secondsElapsed += 1
-                
-                if secondsElapsed.isMultiple(of:
-                Int(syncup.durationPerAttendee.components.seconds)) {
-                    if speakerIndex == syncup.attendees.count - 1 {
-                        // end meeting
-                        // this feature should not be solely responsible for ending the meeting, it should communicate to the parent to let them know the meeting has ended, and then the parent could do the work to pop the screen off the stack and maybe insert the meeting into the history array. Also it'd be nice to show with a little animation when the meeting is inserted into the history list. So we'll facilitaye this child-parent communication in the same way we did for the detail screen that communicated to the list screen
-                        onMeetingFinished() // this only works if the parent is actually listening, and that is a very subte thing. Hence we use unimplemented above
-                        break // break out the timer
+            try await withThrowingTaskGroup(of: Void.self) { group in
+                //if await requestAuthorization() == .authorized {
+                    group.addTask {
+                        // Start speech task
+                        try await self.startSpeechRecognition()
                     }
-                    speakerIndex += 1
+                //}
+                group.addTask {
+                    // Timer task
+                    try await self.startTimer()
                 }
+                try await group.waitForAll()
             }
         } catch {
+            destination = .alert(AlertState(title: TextState("Something went wrong")))
+        }
+    }
+    
+    private func startSpeechRecognition() async throws {
+        let speech = Speech()
+        for try await result in await speech.startTask(request: SFSpeechAudioBufferRecognitionRequest()) {
+            transcript = result.bestTranscription.formattedString
+//            if let text = result.bestTranscription.formattedString {
+//                destination = .alert(AlertState(title: TextState(text)))
+//            }
+        }
+    }
+    
+    private func startTimer() async throws {
+        while true {
+            // NOTE: this is not the best way to implement a timer, it is very imprecise. But we'll keep it for now. We'll address the issue of dependencies and testing later on.
+            try await Task.sleep(for: .seconds(1)) // Task.sleep can throw, and that happens when the asynchronous context is cancelled, so we need to wrap it in a do {} catch {}, bacause we don't want task() to throw since we can't throw over in the View
+            guard !isAlertOpen else { continue } // pause timer when alert is presented
+            secondsElapsed += 1
             
+            if secondsElapsed.isMultiple(of:
+            Int(syncup.durationPerAttendee.components.seconds)) {
+                if speakerIndex == syncup.attendees.count - 1 {
+                    // end meeting
+                    // this feature should not be solely responsible for ending the meeting, it should communicate to the parent to let them know the meeting has ended, and then the parent could do the work to pop the screen off the stack and maybe insert the meeting into the history array. Also it'd be nice to show with a little animation when the meeting is inserted into the history list. So we'll facilitaye this child-parent communication in the same way we did for the detail screen that communicated to the list screen
+                    onMeetingFinished(transcript) // this only works if the parent is actually listening, and that is a very subte thing. Hence we use unimplemented above
+                    break // break out the timer
+                }
+                speakerIndex += 1
+            }
+        }
+    }
+    
+    private func requestAuthorization() async -> SFSpeechRecognizerAuthorizationStatus {
+        await withUnsafeContinuation { continuation in
+            SFSpeechRecognizer.requestAuthorization { status in
+                continuation.resume(returning: status)
+            }
         }
     }
 }
