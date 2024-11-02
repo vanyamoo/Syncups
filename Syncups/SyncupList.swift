@@ -42,6 +42,7 @@ final class SyncupListModel: ObservableObject {
         
         $syncups
             .dropFirst() // small optimisation: no need to save the first emission because it's going to be whatever we loaded
+            .debounce(for: .seconds(1), scheduler: DispatchQueue.main)// we wait for a silent period of 1 sec before doing a save to space out the saves
             .sink { syncups in //we get a warning result of call to sink is unused, and that's because it returns a Cancellable, and we should keep track of it, so we'll do .store(in ...) below
             do {
                 try JSONEncoder().encode(syncups).write(to: .syncups)
