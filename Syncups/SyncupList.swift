@@ -14,11 +14,13 @@ import SwiftUI
 final class SyncupListModel: ObservableObject {
     @Published var syncups: IdentifiedArrayOf<Syncup> // [Syncup]
     //@Published var addSyncup: Syncup? // nill - the addSyncup sheet is presented, non-nill - the sheet is presented
-    @Published var destination: Destination? {// (instead of addSyncup) we hold on to a single piece of state to represent us navigating to a destination, but it's Optional (nill represents we are not navigated anywhere, and non-nill represents we are navigated to one of the Destinations)
-        didSet { bind() } // bind to the onConfirmDeletion closure (SyncupDetail) // we are now intergrating a parent and a child features together so they can now communicate with each other
-    }
     
     private var destinationCancellable: AnyCancellable? // specifically used when we need to subscribe to updates in a destination
+    private var cancellables: Set<AnyCancellable> = []
+    
+    @Published var destination: Destination? { // (instead of addSyncup) we hold on to a single piece of state to represent us navigating to a destination, but it's Optional (nill represents we are not navigated anywhere, and non-nill represents we are navigated to one of the Destinations)
+        didSet { bind() } // bind to the onConfirmDeletion closure (SyncupDetail) // we are now intergrating a parent and a child features together so they can now communicate with each other
+    }
         
     // models all possible destinations we can navigate to
     @CasePathable //the @CasePathable macro allows one to refer to the cases of an enum with dot-syntax just like one does with structs and properties
@@ -27,9 +29,28 @@ final class SyncupListModel: ObservableObject {
         case detail(SyncupDetailModel)
     }
     
-    init(destination: Destination? = nil, syncups: IdentifiedArrayOf<Syncup> = []) {
+    init(destination: Destination? = nil) {
         self.destination = destination // we add destination to init because whoever creates the model will have the oportunity to have destination hydrated and that's what unlocks deep linking capabilities
-        self.syncups = syncups
+        self.syncups = [] // self.syncups = syncups // 1. we give up initialising the syncups here as it conflicts too much with the persistence logic
+        
+        // 2. we try to load up any previously saved data
+        do {
+            syncups = try JSONDecoder().decode(IdentifiedArray.self, from: Data(contentsOf: .syncups))
+        } catch {
+            // TODO: alert
+        }
+        
+        $syncups
+            .dropFirst() // small optimisation: no need to save the first emission because it's going to be whatever we loaded
+            .sink { syncups in //we get a warning result of call to sink is unused, and that's because it returns a Cancellable, and we should keep track of it, so we'll do .store(in ...) below
+            do {
+                try JSONEncoder().encode(syncups).write(to: .syncups)
+            } catch {
+                // TODO: alert
+            }
+        }
+            .store(in: &cancellables)
+        
         bind() // bind to the onConfirmDeletion closure (SyncupDetail)
     }
     
@@ -201,20 +222,21 @@ extension LabelStyle where Self == TrailingIconLabelStyle {
   static var trailingIcon: Self { Self() }
 }
 
+extension URL {
+  fileprivate static let syncups = Self.documentsDirectory.appending(component: "sync-ups.json")
+}
+
 #Preview {
     SyncupList(
         model: SyncupListModel(
             destination: .detail(
                 SyncupDetailModel(
                     //destination: .meeting(Syncup.mock.meetings[0]),
-                    syncup: .mock)),
+                    syncup: .mock))
 //            destination: .add(
 //                EditSyncupModel(
 //                    focus: .attendee(Syncup.mock.attendees[3].id),
 //                    syncup: .mock)),
-            syncups: [
-                .mock,
-            ]
         )
     )
 }

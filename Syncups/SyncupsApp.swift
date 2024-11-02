@@ -18,12 +18,13 @@ struct SyncupsApp: App {
             
             SyncupList(
                 model: SyncupListModel(
-                    destination: .detail(
-                        SyncupDetailModel(
-                            //destination: .meeting(Syncup.mock.meetings[0]),
-                            destination: .record(RecordMeetingModel(syncup: syncup)),
-                            syncup: .mock)),
-                    syncups: [.mock, .engineeringMock, .designMock]))
+//                    destination: .detail(
+//                        SyncupDetailModel(
+//                            //destination: .meeting(Syncup.mock.meetings[0]),
+//                            destination: .record(RecordMeetingModel(syncup: syncup)),
+//                            syncup: .mock))
+                )
+            )
             
             
             
