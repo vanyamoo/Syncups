@@ -26,6 +26,20 @@ extension DataManager: DependencyKey {
     )
 }
 
+// we create the perfect little sandbox to use for our tests - for playing around with loading and saving data, all without touching the global mutable shared file system
+extension DataManager {
+    static func mock(initialData: Data = Data()) -> DataManager {
+    //static var mock: DataManager {
+        //var data = Data() // this little mutable piece of data is kind of acting like the file system. However mutable variables and @Sendable closures don't play nicely together. This is just not a valid thing to do in Swift. If these closures were merely @escaping then this would not be an error. It's only an error because Swift knows that @Sendable closures can be executed concurrently and therefore it's not valid to capture mutable data.
+        // we fix this by doing:
+        let data = LockIsolated(initialData) // let data = LockIsolated(Data()) // and so data is now @Sendable (this now can be a let, because LockIsolated is a reference type that manages mutable data on the inside but protects it with a lock)
+        return DataManager(
+            load: { _ in data.value },
+            save: { newData, _ in data.setValue(newData) }
+        )
+    }
+}
+
 // 2. second step - we extend DependencyValues in order to add a computed property for dat manager. And we just have to describe how do we retrieve and set this dependency from this global blob of dependencies - the DependencyValues
 extension DependencyValues {
     var dataManager: DataManager {
