@@ -5,6 +5,7 @@
 //  Created by Vanya Mutafchieva on 05/11/2024.
 //
 
+import CustomDump
 import Dependencies
 import XCTest
 
@@ -50,9 +51,34 @@ class SyncupListTests: XCTestCase {
             let listModel = SyncupListModel()
             
             // the next 3 lines (emulating user actions) pass, but it'll be real pain to emulate user actions like this (adding syncups to the listModel) every time we want to test some special case of a user flow. So we need to start controlling our dependency on loading and saving data to disk
-            // listModel.addSyncupButtonTapped() // we don't need these any more now taht we control our dependency
+            // listModel.addSyncupButtonTapped() // 1. we don't need these any more now that we control our dependency
             // listModel.confirmAddSyncupButtonTapped()
             XCTAssertEqual(listModel.syncups.count, 1)
+            
+            // 2. now finally we can start emulating user actions
+            listModel.syncupTapped(syncup: listModel.syncups[0])
+            guard case let .some(.detail(detailModel)) = listModel.destination
+            else {
+                XCTFail()
+            }
+            XCTAssertEqual(detailModel.syncup, listModel.syncups[0])
+            
+            detailModel.editButtonTapped()
+            guard case let .some(.edit(editModel)) = detailModel.destination
+            else {
+                XCTFail()
+            }
+            XCTAssertNoDifference(editModel.syncup, detailModel.syncup) // XCTAssertEqual(editModel.syncup, detailModel.syncup)
+            
+            editModel.syncup.title = "Product"
+            detailModel.doneEdittingButtonTapped()
+            
+            XCTAssertNil(detailModel.destination)
+            XCTAssertEqual(detailModel.syncup.title, "Product")
+            
+            listModel.destination = nil
+            
+            XCTAssertEqual(listModel.syncups[0], "Product")
         }
     }
 }
