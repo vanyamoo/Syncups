@@ -5,6 +5,7 @@
 //  Created by Vanya Mutafchieva on 05/11/2024.
 //
 
+import Dependencies
 import XCTest
 
 @testable import Syncups
@@ -18,18 +19,25 @@ class SyncupListTests: XCTestCase {
     }
     
     func testPersistence() async throws {
-        let listModel = SyncupListModel()
         
-        XCTAssertEqual(listModel.syncups.count, 0)
-        
-        listModel.addSyncupButtonTapped()
-        listModel.confirmAddSyncupButtonTapped()
-        XCTAssertEqual(listModel.syncups.count, 1)
-        
-        try await Task.sleep(for: .milliseconds(1_100))
-        
-        let nextLaunchListModel = SyncupListModel()
-        XCTAssertEqual(nextLaunchListModel.syncups.count, 1)
+        // we need to control the mainQueue dependency
+        let mainQueue = DispatchQueue.test
+        DependencyValues.withTestValues {
+            $0.mainQueue = mainQueue.eraseToAnyScheduler()
+        } assert: {
+            let listModel = SyncupListModel()
+            
+            XCTAssertEqual(listModel.syncups.count, 0)
+            
+            listModel.addSyncupButtonTapped()
+            listModel.confirmAddSyncupButtonTapped()
+            XCTAssertEqual(listModel.syncups.count, 1)
+            
+            mainQueue.run() // try await Task.sleep(for: .milliseconds(1_100))
+            
+            let nextLaunchListModel = SyncupListModel()
+            XCTAssertEqual(nextLaunchListModel.syncups.count, 1)
+        }
     }
 }
 

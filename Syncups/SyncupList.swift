@@ -6,6 +6,7 @@
 //
 
 import Combine
+import Dependencies
 import IdentifiedCollections
 import SwiftUINavigation
 import SwiftUI
@@ -17,6 +18,8 @@ final class SyncupListModel: ObservableObject {
     
     private var destinationCancellable: AnyCancellable? // specifically used when we need to subscribe to updates in a destination
     private var cancellables: Set<AnyCancellable> = []
+    
+    @Dependency(\.mainQueue) var mainQueue
     
     @Published var destination: Destination? { // (instead of addSyncup) we hold on to a single piece of state to represent us navigating to a destination, but it's Optional (nill represents we are not navigated anywhere, and non-nill represents we are navigated to one of the Destinations)
         didSet { bind() } // bind to the onConfirmDeletion closure (SyncupDetail) // we are now intergrating a parent and a child features together so they can now communicate with each other
@@ -42,7 +45,7 @@ final class SyncupListModel: ObservableObject {
         
         $syncups
             .dropFirst() // small optimisation: no need to save the first emission because it's going to be whatever we loaded
-            .debounce(for: .seconds(1), scheduler: DispatchQueue.main)// we wait for a silent period of 1 sec before doing a save to space out the saves
+            .debounce(for: .seconds(1), scheduler: mainQueue) // .debounce(for: .seconds(1), scheduler: DispatchQueue.main) // we reach out to the global uncontrollable main queue to perform this debouncing work. This made it difficult to write test for persistence since we literally had to wait for time to pass. the dependencis library comes with controllable combine schedulers // we wait for a silent period of 1 sec before doing a save to space out the saves
             .sink { syncups in //we get a warning result of call to sink is unused, and that's because it returns a Cancellable, and we should keep track of it, so we'll do .store(in ...) below
             do {
                 try JSONEncoder().encode(syncups).write(to: .syncups)
