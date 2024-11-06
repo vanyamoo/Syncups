@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E49C8352CDA8A2F0071755F /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = 4E49C8342CDA8A2F0071755F /* Dependencies */; };
+		4E49C8372CDA8A2F0071755F /* DependenciesMacros in Frameworks */ = {isa = PBXBuildFile; productRef = 4E49C8362CDA8A2F0071755F /* DependenciesMacros */; };
 		4E96473B2CC94C4600C6995B /* Tagged in Frameworks */ = {isa = PBXBuildFile; productRef = 4E96473A2CC94C4600C6995B /* Tagged */; };
 		4E96473D2CC94C4600C6995B /* TaggedMoney in Frameworks */ = {isa = PBXBuildFile; productRef = 4E96473C2CC94C4600C6995B /* TaggedMoney */; };
 		4E96473F2CC94C4600C6995B /* TaggedTime in Frameworks */ = {isa = PBXBuildFile; productRef = 4E96473E2CC94C4600C6995B /* TaggedTime */; };
@@ -14,12 +16,18 @@
 		4E9647452CCA5C4000C6995B /* SwiftNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 4E9647442CCA5C4000C6995B /* SwiftNavigation */; };
 		4E9647472CCA5C4000C6995B /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 4E9647462CCA5C4000C6995B /* SwiftUINavigation */; };
 		4E9647492CCA5C4000C6995B /* UIKitNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 4E9647482CCA5C4000C6995B /* UIKitNavigation */; };
-		4EA6FF4D2CD66BFA00B4537F /* Speech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EA6FF4C2CD66BFA00B4537F /* Speech.framework */; };
 		4EB425B82CD29631003222B7 /* IdentifiedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 4EB425B72CD29631003222B7 /* IdentifiedCollections */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		4E96482D2CCBB73B00C6995B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4E96471A2CC9474700C6995B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4E9647212CC9474700C6995B;
+			remoteInfo = Syncups;
+		};
+		4EDAB1CD2CDB9802000C4AE3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4E96471A2CC9474700C6995B /* Project object */;
 			proxyType = 1;
@@ -32,6 +40,7 @@
 		4E9647222CC9474700C6995B /* Syncups.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Syncups.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E9648292CCBB73B00C6995B /* SyncupsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SyncupsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EA6FF4C2CD66BFA00B4537F /* Speech.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Speech.framework; path = System/Library/Frameworks/Speech.framework; sourceTree = SDKROOT; };
+		4EDAB1C72CDB9802000C4AE3 /* SyncupsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SyncupsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -45,6 +54,11 @@
 			path = SyncupsTests;
 			sourceTree = "<group>";
 		};
+		4EDAB1C82CDB9802000C4AE3 /* SyncupsUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = SyncupsUITests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,18 +67,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				4E9647492CCA5C4000C6995B /* UIKitNavigation in Frameworks */,
-				4EA6FF4D2CD66BFA00B4537F /* Speech.framework in Frameworks */,
+				4E49C8372CDA8A2F0071755F /* DependenciesMacros in Frameworks */,
 				4EB425B82CD29631003222B7 /* IdentifiedCollections in Frameworks */,
 				4E96473B2CC94C4600C6995B /* Tagged in Frameworks */,
 				4E9647432CCA5C4000C6995B /* AppKitNavigation in Frameworks */,
 				4E9647472CCA5C4000C6995B /* SwiftUINavigation in Frameworks */,
 				4E9647452CCA5C4000C6995B /* SwiftNavigation in Frameworks */,
+				4E49C8352CDA8A2F0071755F /* Dependencies in Frameworks */,
 				4E96473D2CC94C4600C6995B /* TaggedMoney in Frameworks */,
 				4E96473F2CC94C4600C6995B /* TaggedTime in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		4E9648262CCBB73B00C6995B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4EDAB1C42CDB9802000C4AE3 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -79,6 +101,7 @@
 			children = (
 				4E9647242CC9474700C6995B /* Syncups */,
 				4E96482A2CCBB73B00C6995B /* SyncupsTests */,
+				4EDAB1C82CDB9802000C4AE3 /* SyncupsUITests */,
 				4E9647412CCA5C4000C6995B /* Frameworks */,
 				4E9647232CC9474700C6995B /* Products */,
 			);
@@ -89,6 +112,7 @@
 			children = (
 				4E9647222CC9474700C6995B /* Syncups.app */,
 				4E9648292CCBB73B00C6995B /* SyncupsTests.xctest */,
+				4EDAB1C72CDB9802000C4AE3 /* SyncupsUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -129,6 +153,8 @@
 				4E9647462CCA5C4000C6995B /* SwiftUINavigation */,
 				4E9647482CCA5C4000C6995B /* UIKitNavigation */,
 				4EB425B72CD29631003222B7 /* IdentifiedCollections */,
+				4E49C8342CDA8A2F0071755F /* Dependencies */,
+				4E49C8362CDA8A2F0071755F /* DependenciesMacros */,
 			);
 			productName = Syncups;
 			productReference = 4E9647222CC9474700C6995B /* Syncups.app */;
@@ -157,6 +183,29 @@
 			productReference = 4E9648292CCBB73B00C6995B /* SyncupsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		4EDAB1C62CDB9802000C4AE3 /* SyncupsUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4EDAB1CF2CDB9802000C4AE3 /* Build configuration list for PBXNativeTarget "SyncupsUITests" */;
+			buildPhases = (
+				4EDAB1C32CDB9802000C4AE3 /* Sources */,
+				4EDAB1C42CDB9802000C4AE3 /* Frameworks */,
+				4EDAB1C52CDB9802000C4AE3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4EDAB1CE2CDB9802000C4AE3 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				4EDAB1C82CDB9802000C4AE3 /* SyncupsUITests */,
+			);
+			name = SyncupsUITests;
+			packageProductDependencies = (
+			);
+			productName = SyncupsUITests;
+			productReference = 4EDAB1C72CDB9802000C4AE3 /* SyncupsUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -164,7 +213,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1600;
+				LastSwiftUpdateCheck = 1610;
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					4E9647212CC9474700C6995B = {
@@ -172,6 +221,10 @@
 					};
 					4E9648282CCBB73B00C6995B = {
 						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 4E9647212CC9474700C6995B;
+					};
+					4EDAB1C62CDB9802000C4AE3 = {
+						CreatedOnToolsVersion = 16.1;
 						TestTargetID = 4E9647212CC9474700C6995B;
 					};
 				};
@@ -189,6 +242,8 @@
 				4E9647392CC94C4600C6995B /* XCRemoteSwiftPackageReference "swift-tagged" */,
 				4E9647402CCA5C2A00C6995B /* XCRemoteSwiftPackageReference "swift-navigation" */,
 				4EB425B62CD295E4003222B7 /* XCRemoteSwiftPackageReference "swift-identified-collections" */,
+				4E49C8302CDA7FAA0071755F /* XCRemoteSwiftPackageReference "swift-clocks" */,
+				4E49C8332CDA8A150071755F /* XCRemoteSwiftPackageReference "swift-dependencies" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4E9647232CC9474700C6995B /* Products */;
@@ -197,6 +252,7 @@
 			targets = (
 				4E9647212CC9474700C6995B /* Syncups */,
 				4E9648282CCBB73B00C6995B /* SyncupsTests */,
+				4EDAB1C62CDB9802000C4AE3 /* SyncupsUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -210,6 +266,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		4E9648272CCBB73B00C6995B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4EDAB1C52CDB9802000C4AE3 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -233,6 +296,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4EDAB1C32CDB9802000C4AE3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -240,6 +310,11 @@
 			isa = PBXTargetDependency;
 			target = 4E9647212CC9474700C6995B /* Syncups */;
 			targetProxy = 4E96482D2CCBB73B00C6995B /* PBXContainerItemProxy */;
+		};
+		4EDAB1CE2CDB9802000C4AE3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4E9647212CC9474700C6995B /* Syncups */;
+			targetProxy = 4EDAB1CD2CDB9802000C4AE3 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -379,6 +454,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -410,6 +486,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -433,9 +510,12 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = HB939N9AUT;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.vanyamoo.SyncupsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -451,13 +531,52 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = HB939N9AUT;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.vanyamoo.SyncupsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Syncups.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Syncups";
+			};
+			name = Release;
+		};
+		4EDAB1D02CDB9802000C4AE3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = HB939N9AUT;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vanyamoo.SyncupsUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Syncups;
+			};
+			name = Debug;
+		};
+		4EDAB1D12CDB9802000C4AE3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = HB939N9AUT;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vanyamoo.SyncupsUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Syncups;
 			};
 			name = Release;
 		};
@@ -491,9 +610,34 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		4EDAB1CF2CDB9802000C4AE3 /* Build configuration list for PBXNativeTarget "SyncupsUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4EDAB1D02CDB9802000C4AE3 /* Debug */,
+				4EDAB1D12CDB9802000C4AE3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		4E49C8302CDA7FAA0071755F /* XCRemoteSwiftPackageReference "swift-clocks" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-clocks.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.5;
+			};
+		};
+		4E49C8332CDA8A150071755F /* XCRemoteSwiftPackageReference "swift-dependencies" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-dependencies.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.4.1;
+			};
+		};
 		4E9647392CC94C4600C6995B /* XCRemoteSwiftPackageReference "swift-tagged" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-tagged";
@@ -521,6 +665,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4E49C8342CDA8A2F0071755F /* Dependencies */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4E49C8332CDA8A150071755F /* XCRemoteSwiftPackageReference "swift-dependencies" */;
+			productName = Dependencies;
+		};
+		4E49C8362CDA8A2F0071755F /* DependenciesMacros */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4E49C8332CDA8A150071755F /* XCRemoteSwiftPackageReference "swift-dependencies" */;
+			productName = DependenciesMacros;
+		};
 		4E96473A2CC94C4600C6995B /* Tagged */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4E9647392CC94C4600C6995B /* XCRemoteSwiftPackageReference "swift-tagged" */;

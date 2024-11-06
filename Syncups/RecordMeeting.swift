@@ -5,6 +5,8 @@
 //  Created by Vanya Mutafchieva on 30/10/2024.
 //
 
+import Clocks
+import Dependencies
 @preconcurrency import Speech
 import SwiftUI
 import SwiftNavigation
@@ -19,6 +21,10 @@ class RecordMeetingModel: ObservableObject {
     @Published var secondsElapsed = 0
     @Published var speakerIndex = 0
     private var transcript = ""
+    
+    
+    @Dependency(\.continuousClock) var clock // similar to @Environment - we provide it with a keypath // private let clock: any Clock<Duration>
+    
     var onMeetingFinished: (String) -> Void = unimplemented("RecordMeetingModel.onMeetingFinished")
     let syncup: Syncup
     
@@ -35,7 +41,11 @@ class RecordMeetingModel: ObservableObject {
         syncup.duration - .seconds(secondsElapsed)
     }
     
-    init(destination: Destination? = nil, syncup: Syncup) {
+    init(
+        //clock: any Clock<Duration> = ContinuousClock(),
+        destination: Destination? = nil, syncup: Syncup
+    ) {
+        //self.clock = clock
         self.destination = destination
         self.syncup = syncup
     }
@@ -96,10 +106,10 @@ class RecordMeetingModel: ObservableObject {
         do {
             try await withThrowingTaskGroup(of: Void.self) { group in
                 //if await requestAuthorization() == .authorized {
-                    group.addTask {
+                    //group.addTask {
                         // Start speech task
-                        try await self.startSpeechRecognition()
-                    }
+                        //try await self.startSpeechRecognition()
+                    //}
                 //}
                 group.addTask {
                     // Timer task
@@ -123,10 +133,11 @@ class RecordMeetingModel: ObservableObject {
     }
     
     private func startTimer() async throws {
-        while true {
+        for await _ in clock.timer(interval: .seconds(1)) where !isAlertOpen {
+            // while true { try await clock.sleep(for: .seconds(1))
             // NOTE: this is not the best way to implement a timer, it is very imprecise. But we'll keep it for now. We'll address the issue of dependencies and testing later on.
-            try await Task.sleep(for: .seconds(1)) // Task.sleep can throw, and that happens when the asynchronous context is cancelled, so we need to wrap it in a do {} catch {}, bacause we don't want task() to throw since we can't throw over in the View
-            guard !isAlertOpen else { continue } // pause timer when alert is presented
+            //try await Task.sleep(for: .seconds(1)) // Task.sleep can throw, and that happens when the asynchronous context is cancelled, so we need to wrap it in a do {} catch {}, bacause we don't want task() to throw since we can't throw over in the View
+            //guard !isAlertOpen else { continue } // pause timer when alert is presented
             secondsElapsed += 1
             
             if secondsElapsed.isMultiple(of:

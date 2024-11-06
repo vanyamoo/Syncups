@@ -6,6 +6,7 @@
 //
 
 import XCTest
+@testable import Syncups
 
 final class SyncupsTests: XCTestCase {
 

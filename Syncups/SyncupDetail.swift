@@ -5,6 +5,8 @@
 //  Created by Vanya Mutafchieva on 28/10/2024.
 //
 
+import Clocks
+import Dependencies
 import SwiftUINavigation
 import SwiftUI
 import XCTestDynamicOverlay
@@ -17,6 +19,8 @@ class SyncupDetailModel: ObservableObject, Identifiable {
         }
     }
     @Published var syncup: Syncup
+    
+    @Dependency(\.continuousClock) var clock // private let clock: any Clock<Duration>
     
     var onConfirmDeletion: () -> Void = unimplemented("SyncupDetailModel.onConfirmDeletion")
     
@@ -32,7 +36,11 @@ class SyncupDetailModel: ObservableObject, Identifiable {
         case confirmDeletion
     }
     
-    init(destination: Destination? = nil, syncup: Syncup) { // we want to be able to instantiate the model with the destination (because this allows deep linking)
+    init(
+        //clock: any Clock<Duration>,
+        destination: Destination? = nil,
+        syncup: Syncup) { // we want to be able to instantiate the model with the destination (because this allows deep linking)
+        //self.clock = clock
         self.destination = destination
         self.syncup = syncup
         bind()
@@ -73,7 +81,11 @@ class SyncupDetailModel: ObservableObject, Identifiable {
     }
     
     func startMeetingButtonTapped() {
-        destination = .record(RecordMeetingModel(syncup: syncup))
+        destination = .record(
+            RecordMeetingModel(
+                //clock: clock,
+                syncup: syncup
+            ))
     }
     
     private func bind() {
@@ -84,7 +96,7 @@ class SyncupDetailModel: ObservableObject, Identifiable {
                 // to do: append the meeting transcript to the history
                 
                 Task {
-                    try? await Task.sleep(for: .milliseconds(400))
+                    try? await self.clock.sleep(for: .milliseconds(400)) // Task.sleep(for: .milliseconds(400))
                     _ = withAnimation {
                         self.syncup.meetings.insert(
                             Meeting(id: Meeting.ID(UUID()), date: Date(), transcript: transcript),
