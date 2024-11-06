@@ -19,10 +19,8 @@ class SyncupListTests: XCTestCase {
     }
     
     func testPersistence() async throws {
-        
-        // we need to control the mainQueue dependency
         let mainQueue = DispatchQueue.test
-        DependencyValues.withTestValues {
+        DependencyValues.withTestValues { // we need to control the mainQueue dependency
             $0.mainQueue = mainQueue.eraseToAnyScheduler()
         } assert: {
             let listModel = SyncupListModel()
@@ -37,6 +35,20 @@ class SyncupListTests: XCTestCase {
             
             let nextLaunchListModel = SyncupListModel()
             XCTAssertEqual(nextLaunchListModel.syncups.count, 1)
+        }
+    }
+    
+    func testEdit() {
+        let mainQueue = DispatchQueue.test
+        DependencyValues.withTestValues {
+            $0.mainQueue = mainQueue.eraseToAnyScheduler()
+        } assert: {
+            let listModel = SyncupListModel()
+            
+            // the next 3 lines (emulating user actions) pass, but it'll be real pain to emulate user actions like this (adding syncups to the listModel) every time we want to test some special case of a user flow. So we need to start controlling our dependency on loading and saving data to disk
+            listModel.addSyncupButtonTapped()
+            listModel.confirmAddSyncupButtonTapped()
+            XCTAssertEqual(listModel.syncups.count, 1)
         }
     }
 }

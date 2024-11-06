@@ -11,6 +11,30 @@ import IdentifiedCollections
 import SwiftUINavigation
 import SwiftUI
 
+
+struct DataManager: Sendable {
+    var load: @Sendable (URL) throws -> Data
+    var save: @Sendable (Data, URL) throws -> Void
+}
+
+// 1. first step of registering the dependency with the Dependencies library  - we make it conform to the DependencyKey
+extension DataManager: DependencyKey {
+    static let liveValue = DataManager(
+        //this is a live data manager because it interacting with the actual foundation APIs for loading and saving data
+        load:  { url in try Data(contentsOf: url) },
+        save: { data, url in try data.write(to: url) }
+    )
+}
+
+// 2. second step - we extend DependencyValues in order to add a computed property for dat manager. And we just have to describe how do we retrieve and set this dependency from this global blob of dependencies - the DependencyValues
+extension DependencyValues {
+    var dataManager: DataManager {
+        get { self[DataManager.self] }
+        set { self[DataManager.self] = newValue }
+    }
+}
+
+
 @MainActor
 final class SyncupListModel: ObservableObject {
     @Published var syncups: IdentifiedArrayOf<Syncup> // [Syncup]
@@ -19,6 +43,8 @@ final class SyncupListModel: ObservableObject {
     private var destinationCancellable: AnyCancellable? // specifically used when we need to subscribe to updates in a destination
     private var cancellables: Set<AnyCancellable> = []
     
+    // 3. third step after registering the dependency with the Dependencies library - we start making use of it
+    @Dependency(\.dataManager) var dataManager
     @Dependency(\.mainQueue) var mainQueue
     
     @Published var destination: Destination? { // (instead of addSyncup) we hold on to a single piece of state to represent us navigating to a destination, but it's Optional (nill represents we are not navigated anywhere, and non-nill represents we are navigated to one of the Destinations)
@@ -38,7 +64,10 @@ final class SyncupListModel: ObservableObject {
         
         // 2. we try to load up any previously saved data
         do {
-            syncups = try JSONDecoder().decode(IdentifiedArray.self, from: Data(contentsOf: .syncups))
+            syncups = try JSONDecoder().decode(
+                IdentifiedArray.self,
+                from: dataManager.load(.syncups) // Data(contentsOf: .syncups)
+            )
         } catch {
             // TODO: alert
         }
@@ -46,13 +75,14 @@ final class SyncupListModel: ObservableObject {
         $syncups
             .dropFirst() // small optimisation: no need to save the first emission because it's going to be whatever we loaded
             .debounce(for: .seconds(1), scheduler: mainQueue) // .debounce(for: .seconds(1), scheduler: DispatchQueue.main) // we reach out to the global uncontrollable main queue to perform this debouncing work. This made it difficult to write test for persistence since we literally had to wait for time to pass. the dependencis library comes with controllable combine schedulers // we wait for a silent period of 1 sec before doing a save to space out the saves
-            .sink { syncups in //we get a warning result of call to sink is unused, and that's because it returns a Cancellable, and we should keep track of it, so we'll do .store(in ...) below
-            do {
-                try JSONEncoder().encode(syncups).write(to: .syncups)
-            } catch {
-                // TODO: alert
+            .sink { [weak self] syncups in //we get a warning result of call to sink is unused, and that's because it returns a Cancellable, and we should keep track of it, so we'll do .store(in ...) below
+                guard let self else { return }
+                do {
+                    try dataManager.save( JSONEncoder().encode(syncups), .syncups) // try JSONEncoder().encode(syncups).write(to: .syncups)
+                } catch {
+                    // TODO: alert
+                }
             }
-        }
             .store(in: &cancellables)
         
         bind() // bind to the onConfirmDeletion closure (SyncupDetail)
