@@ -8,6 +8,8 @@ import Clocks
 import Dependencies
 import XCTest
 @testable import Syncups
+//import Speech
+//@preconcurrency import Speech
 
 
 class NewRecordMeetingTests: XCTestCase {
@@ -15,6 +17,7 @@ class NewRecordMeetingTests: XCTestCase {
     func testTimer() async {
         await DependencyValues.withTestValues {
             $0.continuousClock = ImmediateClock()
+            $0.speechClient.requestAuthorization = { .denied }
         } assert: { @MainActor in
             var syncup = Syncup.mock
             syncup.duration = .seconds(6)

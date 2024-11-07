@@ -78,7 +78,7 @@ class SyncupListTests: XCTestCase {
             
             listModel.destination = nil
             
-            XCTAssertEqual(listModel.syncups[0], "Product")
+            XCTAssertEqual(listModel.syncups[0].title, "Product")
         }
     }
 }

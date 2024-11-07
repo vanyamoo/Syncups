@@ -24,6 +24,7 @@ class RecordMeetingModel: ObservableObject {
     
     
     @Dependency(\.continuousClock) var clock // similar to @Environment - we provide it with a keypath // private let clock: any Clock<Duration>
+    @Dependency(\.speechClient) var speechClient
     
     var onMeetingFinished: (String) -> Void = unimplemented("RecordMeetingModel.onMeetingFinished")
     let syncup: Syncup
@@ -105,12 +106,12 @@ class RecordMeetingModel: ObservableObject {
         // one way to start a very basic timer is to start an infinite loop and do a sleep on the inside
         do {
             try await withThrowingTaskGroup(of: Void.self) { group in
-                //if await requestAuthorization() == .authorized {
-                    //group.addTask {
+                if await speechClient.requestAuthorization() == .authorized {// requestAuthorization() == .authorized {
+                    group.addTask {
                         // Start speech task
-                        //try await self.startSpeechRecognition()
-                    //}
-                //}
+                        try await self.startSpeechRecognition()
+                    }
+                }
                 group.addTask {
                     // Timer task
                     try await self.startTimer()
@@ -123,8 +124,9 @@ class RecordMeetingModel: ObservableObject {
     }
     
     private func startSpeechRecognition() async throws {
-        let speech = Speech()
-        for try await result in await speech.startTask(request: SFSpeechAudioBufferRecognitionRequest()) {
+        //let speech = Speech()
+        let speechTask =  await speechClient.startTask(SFSpeechAudioBufferRecognitionRequest()) // speech.startTask(request:
+        for try await result in speechTask {
             transcript = result.bestTranscription.formattedString
 //            if let text = result.bestTranscription.formattedString {
 //                destination = .alert(AlertState(title: TextState(text)))
@@ -153,13 +155,13 @@ class RecordMeetingModel: ObservableObject {
         }
     }
     
-    private func requestAuthorization() async -> SFSpeechRecognizerAuthorizationStatus {
-        await withUnsafeContinuation { continuation in
-            SFSpeechRecognizer.requestAuthorization { status in
-                continuation.resume(returning: status)
-            }
-        }
-    }
+//    private func requestAuthorization() async -> SFSpeechRecognizerAuthorizationStatus {
+//        await withUnsafeContinuation { continuation in
+//            SFSpeechRecognizer.requestAuthorization { status in
+//                continuation.resume(returning: status)
+//            }
+//        }
+//    }
 }
 
 extension AlertState where Action == RecordMeetingModel.AlertAction {
