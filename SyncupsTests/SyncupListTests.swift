@@ -60,6 +60,7 @@ class SyncupListTests: XCTestCase {
             guard case let .some(.detail(detailModel)) = listModel.destination
             else {
                 XCTFail()
+                return
             }
             XCTAssertEqual(detailModel.syncup, listModel.syncups[0])
             
@@ -67,8 +68,9 @@ class SyncupListTests: XCTestCase {
             guard case let .some(.edit(editModel)) = detailModel.destination
             else {
                 XCTFail()
+                return
             }
-            XCTAssertNoDifference(editModel.syncup, detailModel.syncup) // XCTAssertEqual(editModel.syncup, detailModel.syncup)
+            expectNoDifference(editModel.syncup, detailModel.syncup) // XCTAssertEqual(editModel.syncup, detailModel.syncup)
             
             editModel.syncup.title = "Product"
             detailModel.doneEdittingButtonTapped()
