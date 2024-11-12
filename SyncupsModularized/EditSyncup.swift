@@ -5,6 +5,7 @@
 //  Created by Vanya Mutafchieva on 24/10/2024.
 //
 
+import Models
 import SwiftUI
 //import SwiftUINavigation
 

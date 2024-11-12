@@ -8,6 +8,7 @@
 import Combine
 import Dependencies
 import IdentifiedCollections
+import Models
 import SwiftUINavigation
 import SwiftUI
 
